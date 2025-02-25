@@ -15,4 +15,5 @@ The deck of cards will be implemented as a linked list and consist of two major 
 1. A log keeping track of all actions taken in the game should be displayed
 2. An AI opponent is not required, you can assume the computer will be passed back and forth while playing the game.
 
-
+# Submission
+Each person will submit the code indiviudally, but leave a comment on who you worked with for the lab.
