@@ -44,7 +44,7 @@ Player Actions per Turn:
 - Can choose one action per unit
 - Attack
 - Defend
-- Check what both players HPs are
-- What each player has on the field (being played)
+- Check what both players HPs are (Field)
+- What each player has on the field (being played) ; (Field)
 - What you the player has in their hand (ONLY SEEN BY EACH INDIVIDUAL)
 - Remaining Mana/Max Mana
