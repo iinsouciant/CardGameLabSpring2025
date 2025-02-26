@@ -13,6 +13,7 @@ Cost of resource:
 Game Fundamentals:
 
 - Each player is given 25 cards randomly (Spells and Unit Cards RNG)
+- 50 cards in the deck total
 - Play as many cards they want in a turn 
 - Can activate up to three cards (defend and attack) 
 - Mana system (should get full energy each turn) like elixir system card; each card has a certain cost
