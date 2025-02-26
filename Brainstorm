@@ -22,13 +22,13 @@ Cost of resource:
 Game Fundamentals:
 
 - Flip a coin/roll a die 50/50 chance to see which Player goes first
-- Each player is given 25 cards randomly (Spells and Unit Cards RNG)
-- 50 cards in the deck total; draw 1 random card per turn (some spell cards can draw more cards)
-- Play as many abilities they want in a turn 
-- Can activate up to three cards (defend and attack) 
+- Each player is given 25 cards in their deck randomly (Spells and Unit Cards RNG)
+- First turn each player draws 5 on first turn; draw 1 random card per turn (some spell cards can draw more cards)
+- Use as many units on the field as the player wants per turn 
 - Mana system (should get full energy each turn) like elixir system card; each card has a certain cost
+- Max mana starts 2 first turn, increases by 1 every subsequent turn to a maximum of 10.
 - Each player starts with **20 HP** (Temporary)
-- Each unit can only do one action per turn
+- Each unit can only do one action (attack/defend) per turn
 - Overflow damage, difference of damage taken goes to user; For instance: Player 1 deals 20 damage and Player 2 Defends with 16 HP, Player 2 will have 4 HP deducted from their total HP
 
 - No AI playing, just two individuals playing back and forth
