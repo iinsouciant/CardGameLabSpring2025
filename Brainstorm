@@ -21,6 +21,7 @@ Cost of resource:
 
 Game Fundamentals:
 
+- Flip a coin/roll a die 50/50 chance to see which Player goes first
 - Each player is given 25 cards randomly (Spells and Unit Cards RNG)
 - 50 cards in the deck total; draw 1 random card per turn (some spell cards can draw more cards)
 - Play as many abilities they want in a turn 
