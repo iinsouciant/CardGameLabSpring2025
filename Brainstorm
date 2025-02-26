@@ -3,6 +3,7 @@ Main Parent: Card
 
 Board/Field Class: ? --> Play class that tracks cards for Player 1 and Player 2
 
+
 **Classes: Unit Cards**
 - Name: Wizards, Tanks, Attackers
 
@@ -19,7 +20,7 @@ Game Fundamentals:
 - Play as many abilities they want in a turn 
 - Can activate up to three cards (defend and attack) 
 - Mana system (should get full energy each turn) like elixir system card; each card has a certain cost
-- 
+- Each player starts with **20 HP** (Temporary)
 
 - No AI playing, just two individuals playing back and forth
 
