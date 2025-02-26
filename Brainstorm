@@ -16,5 +16,10 @@ Game Fundamentals:
 - Play as many cards they want in a turn 
 - Can activate up to three cards (defend and attack) 
 - Mana system (should get full energy each turn) like elixir system card; each card has a certain cost
+- 
 
 - No AI playing, just two individuals playing back and forth
+
+Winning Conditions:
+
+- No more cards to draw by player
