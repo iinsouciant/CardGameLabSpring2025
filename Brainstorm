@@ -40,7 +40,7 @@ Winning Conditions:
 - Nothing on the field placed by them
 - No more HP
 
-Player Actions per Turn:
+Player Actions per Turn (PRINTS OUT EACH TURN):
 - Can choose one action per unit
 - Attack
 - Defend
