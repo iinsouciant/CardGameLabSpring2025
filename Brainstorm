@@ -25,6 +25,7 @@ Game Fundamentals:
 - Mana system (should get full energy each turn) like elixir system card; each card has a certain cost
 - Each player starts with **20 HP** (Temporary)
 - Each unit can only do one action per turn
+- Overflow damage, difference of damage taken goes to user; For instance: Player 1 deals 20 damage and Player 2 Defends with 16 HP, Player 2 will have 4 HP deducted from their total HP
 
 - No AI playing, just two individuals playing back and forth
 - IMPORTANT: "Before the end of each round, the player can choose to attack with their played units. Their opponent can defend with their own units, but defending units cannot attack the next turn"
