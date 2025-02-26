@@ -39,3 +39,8 @@ Winning Conditions:
 - No more cards to draw by player when no more cards in their hands
 - Nothing on the field placed by them
 - No more HP
+
+Player Actions per Turn:
+- Can choose one action per unit
+- Attack
+- Defend
