@@ -1,7 +1,7 @@
 ----------------------------------------------------
 Main Parent: Card 
 
-Board/Field: ? --> Play class that tracks cards for Player 1 and Player 2
+Board/Field Class: ? --> Play class that tracks cards for Player 1 and Player 2
 
 **Classes: Unit Cards**
 - Name: Wizards, Tanks, Attackers
