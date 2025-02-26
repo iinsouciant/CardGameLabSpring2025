@@ -9,12 +9,12 @@ Wizards,
 Tanks, 
 Attackers, 
 
-
 **Spells: Spell Cards**
 - Constructor: Name, Mana, Description
 Healing, 
 Damage, 
 Shield, 
+Draw Card, 
 
 Cost of resource:
 - Mana
