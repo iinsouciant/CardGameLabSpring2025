@@ -3,7 +3,6 @@ Main Parent: Card
 
 Board/Field Class: ? --> Play class that tracks cards for Player 1 and Player 2
 
-
 **Classes: Unit Cards**
 - Constructor: Name, Attack Dmg, HP Stat, Mana, Description
 Wizards, 
@@ -25,8 +24,10 @@ Game Fundamentals:
 - Can activate up to three cards (defend and attack) 
 - Mana system (should get full energy each turn) like elixir system card; each card has a certain cost
 - Each player starts with **20 HP** (Temporary)
+- Each unit can only do one action per turn
 
 - No AI playing, just two individuals playing back and forth
+- IMPORTANT: "Before the end of each round, the player can choose to attack with their played units. Their opponent can defend with their own units, but defending units cannot attack the next turn"
 
 Winning Conditions:
 
