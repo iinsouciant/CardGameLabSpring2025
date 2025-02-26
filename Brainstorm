@@ -25,5 +25,6 @@ Game Fundamentals:
 
 Winning Conditions:
 
-- No more cards to draw by player
-- 
+- No more cards to draw by player when no more cards in their hands
+- Nothing on the field placed by them
+- No more HP
