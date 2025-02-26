@@ -7,7 +7,7 @@ Board/Field Class: ? --> Play class that tracks cards for Player 1 and Player 2
 - Constructor: Name, Attack Dmg, HP Stat, Mana, Description
 Wizards, 
 Tanks, 
-Attackers
+Attackers, 
 
 
 **Spells: Spell Cards**
