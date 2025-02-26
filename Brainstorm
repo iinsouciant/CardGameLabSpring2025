@@ -1,7 +1,7 @@
 ----------------------------------------------------
 Main Parent: Card 
 
-Board/Field: ?
+Board/Field: ? --> Play class that tracks cards for Player 1 and Player 2
 
 **Classes: Unit Cards**
 - Name: Wizards, Tanks, Attackers
@@ -26,3 +26,4 @@ Game Fundamentals:
 Winning Conditions:
 
 - No more cards to draw by player
+- 
