@@ -5,7 +5,7 @@ Board/Field Class: ? --> Play class that tracks cards for Player 1 and Player 2
 
 
 **Classes: Unit Cards**
-- Constructor: Name, Attack Dmg, HP Stat, Mana
+- Constructor: Name, Attack Dmg, HP Stat, Mana, Description
 Wizards, 
 Tanks, 
 Attackers
