@@ -11,7 +11,10 @@ Attackers
 
 
 **Spells: Spell Cards**
-- Healing, Damage, Shield
+- Constructor: Name, Mana, Description
+Healing, 
+Damage, 
+Shield, 
 
 Cost of resource:
 - Mana
