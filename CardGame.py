@@ -79,7 +79,7 @@ class UnitCard(Card):
         pass
     
     def cast(self):
-        pass
+        raise NotImplementedError
 
 class SpellCard(Card):
     """
@@ -92,7 +92,7 @@ class SpellCard(Card):
         return f"{self.name}: {self.description}\nMana cost: {self.cost}"
     
     def cast(self):
-        pass
+        raise NotImplementedError
 
 if __name__ == "__main__":
     pass
