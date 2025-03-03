@@ -97,4 +97,4 @@ class SpellCard(Card):
 if __name__ == "__main__":
     pass
 
-#Test
+# Class Creation
