@@ -17,3 +17,17 @@ The deck of cards will be implemented as a linked list and consist of two major 
 
 # Submission
 Each person will submit the code indiviudally, but leave a comment on who you worked with for the lab.
+
+--------------------------------------------------------------------------------------------------------------
+
+# Planning Write Up
+
+Depicted below is the Unified Modeling Language (UML) Diagram for the Homebrew Card Game known as Hearthgathering... ; 
+
+## UML Diagram
+
+- TBD
+
+## Division of Labor Documentation
+
+- TBD
