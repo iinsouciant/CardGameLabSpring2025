@@ -28,6 +28,11 @@ Depicted below is the Unified Modeling Language (UML) Diagram for the Homebrew C
 
 - TBD
 
+### UML Diagram Index
+
+![image](https://github.com/user-attachments/assets/d3f1b373-eb92-4bd5-b878-666dd3e63ebc)
+
+
 ## Division of Labor Documentation
 
 - TBD
