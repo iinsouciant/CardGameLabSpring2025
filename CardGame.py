@@ -14,7 +14,8 @@ class Player():
         self.maxMana = maxMana
         self.mana = maxMana
         self.deck = deck
-        self.hand = []
+        self.hand = [] # contains Card objects in hand that can be played
+        self.field = [] # contains UnitCard objects that can be used
 
     def __str__(self) -> str:
         return f"{self.name} has {self.HP}/{self.maxHP} HP and {self.mana}/{self.maxMana} mana"
@@ -31,6 +32,15 @@ class Player():
         elif (self.deck <= 0) and (len(self.hand) == 0):
             return False
         return True
+    
+    def startTurn(self) -> None:
+        pass
+
+    def defendDamage(self, dmg: int) -> None:
+        pass
+
+    def awakenField(self) -> None:
+        pass
 
 class Card():
     """
@@ -71,6 +81,7 @@ class UnitCard(Card):
         self.attack = attack
         self.maxHP = maxHP
         self.HP = maxHP
+        self.asleep = True # unit is asleep first turn. cannot block or attack. Awaken on next turn
 
     def __str__(self) -> str:
         return f"{self.name}: {self.description}\nMana cost: {self.cost}\nAttack: {self.attack}\nHP: {self.HP}/{self.maxHP}"
