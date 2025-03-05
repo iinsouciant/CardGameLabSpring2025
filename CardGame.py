@@ -4,6 +4,8 @@ Some description of each of the cards/classes implemented for this game
 
 import random
 import re
+import os
+import consolemenu
 
 class Player():
     """
@@ -108,6 +110,9 @@ class SpellCard(Card):
     def cast(self) -> None:
         raise NotImplementedError
 
+# from https://stackoverflow.com/questions/517970/how-can-i-clear-the-interpreter-console
+clear = lambda: os.system('cls' if os.name == 'nt' else 'clear')
+
 if __name__ == "__main__":
     print("Starting game...\n")
     player1 = Player(input("Enter name for player 1 (P1): "))
@@ -127,5 +132,21 @@ if __name__ == "__main__":
 
     if (heads and not coin) and (not heads and coin):
         print(f"{coinString} {player1.name} goes first.")
+        p1Start = True
     else:
         print(f"{coinString} {player2.name} goes first.")
+        p1Start = False
+
+    # Main loop to proceed with turns while someone has not lost/requested for game exit
+    exitCondition = False
+    while exitCondition == False:
+        clear()
+        if p1Start:
+            # Start turn sequence
+            print(f"Starting turn for {player1.name}.")
+            player1.startTurn()
+
+            # Block incoming damage
+            if (player1.incomingAttack > 0):
+                player1.blockAttack()
+            
