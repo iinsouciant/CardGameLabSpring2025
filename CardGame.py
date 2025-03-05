@@ -17,23 +17,33 @@ class Player():
         self.maxMana = maxMana
         self.mana = maxMana
         self.deck = deck
-        self.hand = []
+        self.hand = [] # contains Card objects in hand that can be played
+        self.field = [] # contains UnitCard objects that can be used
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.name} has {self.HP}/{self.maxHP} HP and {self.mana}/{self.maxMana} mana"
 
-    def drawCards(self, numCards: int):
+    def drawCards(self, numCards: int) -> None:
         pass
 
-    def playCard(self):
+    def playCard(self) -> None:
         pass
 
-    def isAlive(self):
+    def isAlive(self) -> bool:
         if self.HP <= 0:
             return False
         elif (self.deck <= 0) and (len(self.hand) == 0):
             return False
         return True
+    
+    def startTurn(self) -> None:
+        pass
+
+    def defendDamage(self, dmg: int) -> None:
+        pass
+
+    def awakenField(self) -> None:
+        pass
 
 class Card():
     """
@@ -44,25 +54,25 @@ class Card():
         self.cost = cost
         self.description = description
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.name}: {self.description}\nMana cost: {self.cost}"
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         return self.cost == other.cost
 
-    def __lt__(self, other):
+    def __lt__(self, other) -> bool:
         return self.cost < other.cost
 
-    def __gt__(self, other):
+    def __gt__(self, other) -> bool:
         return self.cost > other.cost
 
-    def __le__(self, other):
+    def __le__(self, other) -> bool:
         return self.cost <= other.cost
 
-    def __ge__(self, other):
+    def __ge__(self, other) -> bool:
         return self.cost >= other.cost
 
-    def __ne__(self, other):
+    def __ne__(self, other) -> bool:
         return self.cost != other.cost
     
 class UnitCard(Card):
@@ -74,14 +84,15 @@ class UnitCard(Card):
         self.attack = attack
         self.maxHP = maxHP
         self.HP = maxHP
+        self.asleep = True # unit is asleep first turn. cannot block or attack. Awaken on next turn
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.name}: {self.description}\nMana cost: {self.cost}\nAttack: {self.attack}\nHP: {self.HP}/{self.maxHP}"
     
-    def attack(self, target):
+    def attack(self, target) -> None:
         pass
     
-    def cast(self):
+    def cast(self) -> None:
         raise NotImplementedError
 
 class SpellCard(Card):
@@ -91,10 +102,10 @@ class SpellCard(Card):
     def __init__(self, name: str, description: str, cost: int):
         super().__init__(name, description, cost)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.name}: {self.description}\nMana cost: {self.cost}"
     
-    def cast(self):
+    def cast(self) -> None:
         raise NotImplementedError
 
 if __name__ == "__main__":
