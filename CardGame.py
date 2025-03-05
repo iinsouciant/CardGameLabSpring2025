@@ -2,6 +2,9 @@
 Some description of each of the cards/classes implemented for this game
 """
 
+import random
+import re
+
 class Player():
     """
     Player class that represents a player in the game. Each player has a hand of cards, mana...
@@ -95,4 +98,23 @@ class SpellCard(Card):
         raise NotImplementedError
 
 if __name__ == "__main__":
-    pass
+    print("Starting game...\n")
+    player1 = Player(input("Enter name for player 1 (P1): "))
+    player2 = Player(input("Enter name for player 2 (P2): "))
+    player1.drawCards(5)
+    player2.drawCards(5)
+
+    # Determine player order and validate input
+    response = ""
+    while ((re.search(r"(?i)h(?:eads)?", response) is None) and (re.search(r"(?i)t(?:ails)?", response) is None)):
+        print(response)
+        response = input("P1 choose heads or tails: ")
+    heads = (re.search(r"(?i)h(?:eads)?", response) is None)
+    # Coin toss
+    coin = random.randint(0,1)
+    coinString = "Tails!" if coin else "Heads!"
+
+    if (heads and not coin) and (not heads and coin):
+        print(f"{coinString} {player1.name} goes first.")
+    else:
+        print(f"{coinString} {player2.name} goes first.")
