@@ -98,3 +98,38 @@ if __name__ == "__main__":
     pass
 
 # Class Creation
+
+class Wizard(UnitCard):
+    """
+    Wizard class is a special type of UnitCard that posseses magical abilities; a unit that boosts card spells.
+    """
+
+class Tank(UnitCard):
+    """
+    Tank class is a special type of UnitCard that is able to absorb damage.
+    """
+
+class Attacker(UnitCard): #  Change to Knight ?
+    """
+    Attacker class is a special type of UnitCard that deals large amounts of damage.
+    """
+
+class HealingSpell(SpellCard):
+    """
+    A SpellCard that restores the health of UnitCards.
+    """
+
+class DamageSpell(SpellCard):
+    """
+    A SpellCard that deals damage to an opposing UnitCard/Player.
+    """
+
+class ShieldSpell(SpellCard):
+    """
+    A SpellCard that provides shield for a UnitCard, an additional way to absorb damage.
+    """
+
+class DrawCardSpell(SpellCard):
+    """
+    A SpellCard that allows the player to draw additional cards.
+    """
