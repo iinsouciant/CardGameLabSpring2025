@@ -114,6 +114,19 @@ class Attacker(UnitCard): #  Change to Knight ?
     Attacker class is a special type of UnitCard that deals large amounts of damage.
     """
 
+# Addition: 
+'''
+class Archer(UnitCard): 
+    """
+    Archer class is a special type of UnitCard that is able to pierce through tanks.
+    """
+
+class Bandit(UnitCard):
+    """
+    Bandit class is a special type of UnitCard that is stealthy and powerful but is vulnerable (posseses low health).
+    """
+'''
+
 class HealingSpell(SpellCard):
     """
     A SpellCard that restores the health of UnitCards.
