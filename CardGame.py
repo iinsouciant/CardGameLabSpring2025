@@ -1,5 +1,11 @@
 """
-Some description of each of the cards/classes implemented for this game
+# Libraries:
+    Random library used for coin toss to decide turn order.
+    Regex library to parse user inputs
+    OS library used for clearing console output between turns
+
+    https://pypi.org/project/console-menu/
+    Console-menu library used to simplify displaying and executing text menu functions per turn
 """
 
 import random
