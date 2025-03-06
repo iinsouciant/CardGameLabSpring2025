@@ -2,6 +2,8 @@
 Some description of each of the cards/classes implemented for this game
 """
 
+import random
+
 class Player():
     """
     Player class that represents a player in the game. Each player has a hand of cards, mana...
@@ -103,16 +105,31 @@ class Wizard(UnitCard):
     """
     Wizard class is a special type of UnitCard that posseses magical abilities; a unit that boosts card spells.
     """
+    def __init__(self):
+        super().__init__("Wizard", "A skilled sorcerer capable of boosting attributes of spells to support allies and manipulate opponents", cost = 3, attack = random.randint(2, 5), maxHP = random.randint(5, 7)) # super().__init__(name, description, cost, attack, maxHP)
+    # HP: 5 - 7
+    # Cost: 3 Mana - 4?
+    # Attack: 2 - 5 (Doubler on spells)
 
 class Tank(UnitCard):
     """
     Tank class is a special type of UnitCard that is able to absorb damage.
     """
+    def __init__(self):
+        super().__init__(name, description, cost, attack, maxHP)
+    # HP 12 - 20
+    # Cost: 5-8 mana?
+    # Attack: 1 - 2 or 3?
 
 class Attacker(UnitCard): #  Change to Knight ?
     """
     Attacker class is a special type of UnitCard that deals large amounts of damage.
     """
+    def __init__(self):
+        super().__init__("Knight", description, cost, attack, maxHP)
+    # HP 5 - 8
+    # Cost: 4 - 5
+    # Attack: 5 - 8
 
 # Addition: 
 '''
@@ -120,11 +137,21 @@ class Archer(UnitCard):
     """
     Archer class is a special type of UnitCard that is able to pierce through tanks.
     """
+    def __init__(self):
+        super().__init__(name, description, cost, attack, maxHP)
+    # HP 5 - 6
+    # Cost: 3
+    # Attack: 2 - 4 (Double damage when piercing tanks)
 
 class Bandit(UnitCard):
     """
     Bandit class is a special type of UnitCard that is stealthy and powerful but is vulnerable (posseses low health).
     """
+    def __init__(self):
+        super().__init__(name, description, cost, attack, maxHP)
+    # HP 1 - 2
+    # Cost: 2
+    # Attack: 4 - 8
 '''
 
 class HealingSpell(SpellCard):
