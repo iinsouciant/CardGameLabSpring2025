@@ -148,19 +148,23 @@ if __name__ == "__main__":
 
     if (heads and not coin) and (not heads and coin):
         print(f"{coinString} {player1.name} goes first.")
-        p1Start = True
+        p1Turn = True
     else:
         print(f"{coinString} {player2.name} goes first.")
-        p1Start = False
+        p1Turn = False
 
     # Main loop to proceed with turns while someone has not lost/requested for game exit
     exitCondition = False
+    currentPlayer = None
+    i = 0
     while exitCondition == False:
         clear()
-        if p1Start:
-            # Start turn sequence
-            print(f"Starting turn for {player1.name}.")
-            player1.startTurn()
+        if p1Turn:
+           currentPlayer = player1
+        else:
+            currentPlayer = player2
+
+        currentPlayer.startTurn()
 
             # Block incoming damage
             if (player1.incomingAttack > 0):
