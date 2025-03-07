@@ -25,6 +25,7 @@ class Player():
         self.maxMana = maxMana
         self.mana = maxMana
         self.deck = deck
+        self.incomingAttack = 0
         self.hand = [] # contains Card objects in hand that can be played
         self.field = [] # contains UnitCard objects that can be used
 
@@ -45,7 +46,16 @@ class Player():
         return True
     
     def startTurn(self) -> None:
-        pass
+        # Start turn sequence
+        print(f"Starting turn for {self.name}.")
+        
+        # draw 1 card, self.maxMana = min(10, self.maxMana + 1), self.mana = self.maxMana, print field
+        # prompt with menu:
+        #   play card from hand (print out names and atk/hp of cards in hand -> play unit from hand to field, or cast spell at a target)
+        #   use card in field (choose a card and activate ability or have attack opposite player)
+        #   print out field state again
+        #   end turn
+        #   forfeit
 
     def defendDamage(self, dmg: int) -> None:
         pass
