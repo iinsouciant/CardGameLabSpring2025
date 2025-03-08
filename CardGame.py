@@ -169,18 +169,26 @@ class HealingSpell(SpellCard):
     """
     A SpellCard that restores the health of UnitCards.
     """
+    def __init__(self, name = "Heal", description = "Heals a UnitCard", cost = 2):
+        super().__init__(name, description, cost)
 
 class DamageSpell(SpellCard):
     """
     A SpellCard that deals damage to an opposing UnitCard/Player.
     """
+    def __init__(self, name = "Fireball", description = "Deals damage to an enemy unit", cost=3):
+        super().__init__(name, description, cost)
+        self.damage = random.randint(3, 4)
 
 class ShieldSpell(SpellCard):
     """
     A SpellCard that provides shield for a UnitCard, an additional way to absorb damage.
     """
+    # MANA 1 - 2?
+    # Shield health random 1 - 3?
 
 class DrawCardSpell(SpellCard):
     """
     A SpellCard that allows the player to draw additional cards.
     """
+    # Randomly generate a number of cards 1 - 2?
