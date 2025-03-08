@@ -171,6 +171,7 @@ class HealingSpell(SpellCard):
     """
     def __init__(self, name = "Heal", description = "Heals a UnitCard", cost = 2):
         super().__init__(name, description, cost)
+    # Heals 1 or 2 - 4 HP?
 
 class DamageSpell(SpellCard):
     """
@@ -191,4 +192,4 @@ class DrawCardSpell(SpellCard):
     """
     A SpellCard that allows the player to draw additional cards.
     """
-    # Randomly generate a number of cards 1 - 2?
+    # Randomly generate a number of cards 1 - 2? 
