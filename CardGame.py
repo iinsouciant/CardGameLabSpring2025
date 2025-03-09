@@ -193,3 +193,19 @@ class DrawCardSpell(SpellCard):
     A SpellCard that allows the player to draw additional cards.
     """
     # Randomly generate a number of cards 1 - 2? 
+
+'''
+Requirements (Updated):
+- Deck at least 25 cards, 2 players taking turns (lose if no HP and or no more cards in hand)
+- Multiple types of cards, distinct classes that inherit from a basic Card class
+- Cards WILL BE HELD in a linked list as a deck (be removed from the deck as the game is played)
+'''
+class Node:
+    def __init__(self, card):
+        self.card = card
+        self.next = None
+
+class LinkedList:
+    def __init__(self):
+        self.head = None
+        self.size = 0
