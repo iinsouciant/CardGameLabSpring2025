@@ -4,6 +4,8 @@ For this lab, you will be joining with a new group to create a homebrewed card g
 ###  The Card Game
 The card game will consist of two players, each with a deck of at least 25 cards, taking turns playing cards until they have reduced their opponent's HP to 0 at which point they win. Each player will draw a hand of cards at the start of the game, and continue drawing at the start of their turn.
 
+There must be a deck of cards of multiple, distinct classes that inherit from a basic Card class. The child classes should extend the Card class with real differences between the classes (regular cards vs wild cards in Uno for example).
+
 The deck of cards will be implemented as a linked list and consist of two major card types: Unit Cards and Spell Cards. All cards will posses a name, description, and some cost of resource which prevents a player from playing all of their hand at once (at least at the start of the game).
 
 - Additionally, Unit cards will have an Attack and HP stat
@@ -35,4 +37,5 @@ Depicted below is the Unified Modeling Language (UML) Diagram for the Homebrew C
 
 ## Division of Labor Documentation
 
+- Used VSCode "Git Graph" Installation (Extension): https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph
 - TBD
