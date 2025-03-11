@@ -25,9 +25,9 @@ class Player():
         self.maxMana = maxMana
         self.mana = maxMana
         self.deck = deck
-        self.incomingAttack = 0
         self.hand = [] # contains Card objects in hand that can be played
         self.field = [] # contains UnitCard objects that can be used
+        self.attackQueue = [] # used to hold what cards are being attacked with for opponent's block phase
 
     def __str__(self) -> str:
         return f"{self.name} has {self.HP}/{self.maxHP} HP and {self.mana}/{self.maxMana} mana"
@@ -49,7 +49,9 @@ class Player():
         # Start turn sequence
         print(f"Starting turn for {self.name}.")
         
-        # draw 1 card, self.maxMana = min(10, self.maxMana + 1), self.mana = self.maxMana, print field
+        # draw 1 card, self.maxMana = min(10, self.maxMana + 1), self.mana = self.maxMana, attackQueue emptied
+        # awaken units
+        # print field
         # prompt with menu:
         #   play card from hand (print out names and atk/hp of cards in hand -> play unit from hand to field, or cast spell at a target)
         #   use card in field (choose a card and activate ability or have attack opposite player)
@@ -57,11 +59,15 @@ class Player():
         #   end turn
         #   forfeit
 
-    def defendDamage(self, dmg: int) -> None:
+    def blockAttack(self, card) -> None:
         pass
 
     def awakenField(self) -> None:
         pass
+
+    def attackWithCard(self, card) -> None:
+        self.attackQueue.append(card)
+
 
 class Card():
     """
@@ -108,10 +114,15 @@ class UnitCard(Card):
         return f"{self.name}: {self.description}\nMana cost: {self.cost}\nAttack: {self.attack}\nHP: {self.HP}/{self.maxHP}"
     
     def attack(self, target) -> None:
+
         pass
     
-    def cast(self) -> None:
+    def cast(self, target) -> None:
         raise NotImplementedError
+    
+    def blockAttack(self, card) -> int:
+        # return any overkill damage
+        pass
 
 class SpellCard(Card):
     """
@@ -153,6 +164,13 @@ if __name__ == "__main__":
         print(f"{coinString} {player2.name} goes first.")
         p1Turn = False
 
+    # Create Text Menu with consolemenu
+    # menu = consolemenu.ConsoleMenu("Hearthgathering","Play your turn")
+
+
+    testCard1 = UnitCard("test", "test", 3, 1, 2)
+    testCard2 = UnitCard("test", "test", 3, 1, 1)
+    testCard2.asleep = False
     # Main loop to proceed with turns while someone has not lost/requested for game exit
     exitCondition = False
     currentPlayer = None
@@ -160,13 +178,47 @@ if __name__ == "__main__":
     while exitCondition == False:
         clear()
         if p1Turn:
-           currentPlayer = player1
+           currentPlayer, otherPlayer = player1, player2
         else:
-            currentPlayer = player2
+            currentPlayer, otherPlayer = player2, player1
 
         currentPlayer.startTurn()
+        currentPlayer.attackQueue.append(testCard1)
+        currentPlayer.field.append(testCard2)
 
-            # Block incoming damage
-            if (player1.incomingAttack > 0):
-                player1.blockAttack()
+        # Block phase
+        if len(otherPlayer.attackQueue) > 0:
+            # create a menu that allows player to select and unselect any number of available units on field
+            # create a menu option to confirm ending block phase
+            # ending block phase computes player health then computes unit health/death
+            selectableUnits = []
+            for unit in currentPlayer.field:
+                if unit.asleep is not True:
+                    selectableUnits.append(unit)
+            
+            # create blocking menu
+            for attacker in otherPlayer.attackQueue:
+                blockMenu = consolemenu.ConsoleMenu(title="Block Menu", subtitle=f"Defend against {attacker.name}: ({attacker.attack})-({attacker.HP}/{attacker.maxHP})")
+                blockMenu.exit_item.text = "Forfeit"
+                blockMenu.append_item(consolemenu.items.FunctionItem(f"{currentPlayer.name}: ({currentPlayer.HP}/{currentPlayer.maxHP})",attacker.cast, args=[currentPlayer]))
+                for defender in selectableUnits:
+                    blockMenu.append_item(consolemenu.items.FunctionItem(f"{defender.name}: ({defender.attack})-({defender.HP}/{defender.maxHP})",attacker.cast, args=[defender]))
+
+                blockMenu.show()
+                blockMenu.join()
+
+                if (not currentPlayer.isAlive()) or (blockMenu.exit_item.should_exit):
+                    exitCondition = True
+
+        exitCondition = True if not currentPlayer.isAlive() else False
+
+        
+        p1Turn = not p1Turn
+        i += 1
+        print(i)
+        if i >= 500: # placeholder to prevent being stuck in infinite loop
+            print("Stuck in inifinite loop. Exiting program.")
+            exitCondition = True
+
+    print(f"{currentPlayer.name} is dead! {otherPlayer.name} wins!")
             
