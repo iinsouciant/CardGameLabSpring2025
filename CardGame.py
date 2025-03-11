@@ -21,6 +21,7 @@ class Card():
         self.name = name
         self.cost = cost
         self.description = description
+        self.owner = None
 
     def __str__(self) -> str:
         return f"{self.name}: {self.description}\nMana cost: {self.cost}"
@@ -56,10 +57,6 @@ class UnitCard(Card):
 
     def __str__(self) -> str:
         return f"{self.name}: {self.description}\nMana cost: {self.cost}\nAttack: {self.attack}\nHP: {self.HP}/{self.maxHP}"
-    
-    def attack(self, target) -> None:
-
-        pass
     
     def cast(self, target) -> None:
         raise NotImplementedError
@@ -112,6 +109,9 @@ class Attacker(UnitCard): #  Change to Knight ?
     # HP 5 - 8 ; 6 or 7 - 8 HP?
     # Cost: 4 - 5
     # Attack: 5 - 8
+
+    def cast(self, target):
+
 
 # Addition: 
 '''
