@@ -13,62 +13,6 @@ import re
 import os
 import consolemenu
 
-class Player():
-    """
-    Player class that represents a player in the game. Each player has a hand of cards, mana...
-    """
-    def __init__(self, name: str, deck=25, maxHP=20, maxMana=0, shield=0):
-        self.name = name
-        self.shield = shield
-        self.maxHP = maxHP
-        self.HP = maxHP
-        self.maxMana = maxMana
-        self.mana = maxMana
-        self.deck = deck
-        self.hand = [] # contains Card objects in hand that can be played
-        self.field = [] # contains UnitCard objects that can be used
-        self.attackQueue = [] # used to hold what cards are being attacked with for opponent's block phase
-
-    def __str__(self) -> str:
-        return f"{self.name} has {self.HP}/{self.maxHP} HP and {self.mana}/{self.maxMana} mana"
-
-    def drawCards(self, numCards: int) -> None:
-        pass
-
-    def playCard(self) -> None:
-        pass
-
-    def isAlive(self) -> bool:
-        if self.HP <= 0:
-            return False
-        elif (self.deck <= 0) and (len(self.hand) == 0):
-            return False
-        return True
-    
-    def startTurn(self) -> None:
-        # Start turn sequence
-        print(f"Starting turn for {self.name}.")
-        
-        # draw 1 card, self.maxMana = min(10, self.maxMana + 1), self.mana = self.maxMana, attackQueue emptied
-        # awaken units
-        # print field
-        # prompt with menu:
-        #   play card from hand (print out names and atk/hp of cards in hand -> play unit from hand to field, or cast spell at a target)
-        #   use card in field (choose a card and activate ability or have attack opposite player)
-        #   print out field state again
-        #   end turn
-        #   forfeit
-
-    def blockAttack(self, card) -> None:
-        pass
-
-    def awakenField(self) -> None:
-        pass
-
-    def attackWithCard(self, card) -> None:
-        self.attackQueue.append(card)
-
-
 class Card():
     """
     Card class that represents a card in the game. Each card has a name, a description, and a cost.
@@ -228,6 +172,66 @@ class DrawCardSpell(SpellCard):
         super().__init__(name, description, cost)
         #self.drawRand = random.randint(1, 2)
     # Randomly generate a number of cards 1 - 2? 
+
+class Player():
+    """
+    Player class that represents a player in the game. Each player has a hand of cards, mana...
+    """
+    def __init__(self, name: str, deck=25, maxHP=20, maxMana=0, shield=0):
+        self.name = name
+        self.shield = shield
+        self.maxHP = maxHP
+        self.HP = maxHP
+        self.maxMana = maxMana
+        self.mana = maxMana
+        self.deck = deck
+        self.hand = [] # contains Card objects in hand that can be played
+        self.field = [] # contains UnitCard objects that can be used
+        self.attackQueue = [] # used to hold what cards are being attacked with for opponent's block phase
+
+    def __str__(self) -> str:
+        return f"{self.name} has {self.HP}/{self.maxHP} HP and {self.mana}/{self.maxMana} mana"
+    
+    def forfeit(self) -> None:
+        self.HP = -1
+
+    def drawCards(self, numCards: int) -> None:
+        pass
+
+    def playCard(self, card) -> None:
+        card.owner = self
+        # put unit on field or cast at target if spell
+
+    def isAlive(self) -> bool:
+        if self.HP <= 0:
+            return False
+        elif (self.deck <= 0) and (len(self.hand) == 0):
+            return False
+        return True
+    
+    def startTurn(self) -> None:
+        # Start turn sequence
+        print(f"Starting turn for {self.name}.")
+        
+        # draw 1 card, self.maxMana = min(10, self.maxMana + 1), self.mana = self.maxMana, attackQueue emptied
+        # awaken units
+        # print field
+        # prompt with menu:
+        #   play card from hand (print out names and atk/hp of cards in hand -> play unit from hand to field, or cast spell at a target)
+        #   use card in field (choose a card and activate ability or have attack opposite player)
+        #   print out field state again
+        #   end turn
+        #   forfeit
+
+    def blockAttack(self, card) -> None:
+        pass
+
+    def awakenField(self) -> None:
+        pass
+
+    def attackWithCard(self, card) -> None:
+        self.attackQueue.append(card)
+
 
 '''
 Requirements (Updated):
