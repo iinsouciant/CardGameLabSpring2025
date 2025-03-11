@@ -205,6 +205,8 @@ class DrawCardSpell(SpellCard):
 
 '''
 Requirements (Updated):
+# Create the Player class to track health, deck state, etc and handle drawing and playing cards.
+
 - Deck at least 25 cards, 2 players taking turns (lose if no HP and or no more cards in hand)
 - Multiple types of cards, distinct classes that inherit from a basic Card class
 - Cards WILL BE HELD in a linked list as a deck (be removed from the deck as the game is played)
