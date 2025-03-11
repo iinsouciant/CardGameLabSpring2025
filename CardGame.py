@@ -44,6 +44,10 @@ class Card():
     def __ne__(self, other) -> bool:
         return self.cost != other.cost
     
+    def cast(self, target) -> None:
+        """override with method that does effects based on target type"""
+        raise NotImplementedError
+    
 class UnitCard(Card):
     """
     UnitCard class that represents a playable unit in the game. Each card has a name, a description, a cost, an attack value, and health.
@@ -58,12 +62,15 @@ class UnitCard(Card):
     def __str__(self) -> str:
         return f"{self.name}: {self.description}\nMana cost: {self.cost}\nAttack: {self.attack}\nHP: {self.HP}/{self.maxHP}"
     
-    def cast(self, target) -> None:
-        raise NotImplementedError
+    def isAlive(self) -> bool:
+        return self.HP > 0
     
     def blockAttack(self, card) -> int:
-        # return any overkill damage
-        pass
+        # return damage dealt back to attacker
+        self.HP -= card.attack
+        if self.HP < 0:
+            self.owner.blockAttack(-self.HP)
+        return self.attack
 
 class SpellCard(Card):
     """
@@ -74,9 +81,6 @@ class SpellCard(Card):
 
     def __str__(self) -> str:
         return f"{self.name}: {self.description}\nMana cost: {self.cost}"
-    
-    def cast(self) -> None:
-        raise NotImplementedError
     
 # Note: Can Adjust VALUES of cards later on as the game runs to see fit, balance changes 
 
@@ -100,6 +104,9 @@ class Tank(UnitCard):
     # Cost: 5-8 mana?
     # Attack: 1 - 2 or 3?
 
+    def cast(self, target) -> None:
+        self.HP -= target.blockAttack(self)
+
 class Attacker(UnitCard): #  Change to Knight ?
     """
     Attacker class is a special type of UnitCard that deals large amounts of damage.
@@ -110,8 +117,8 @@ class Attacker(UnitCard): #  Change to Knight ?
     # Cost: 4 - 5
     # Attack: 5 - 8
 
-    def cast(self, target):
-
+    def cast(self, target) -> None:
+        self.HP -= target.blockAttack(self)
 
 # Addition: 
 '''
@@ -242,8 +249,15 @@ class Player():
         #   end turn
         #   forfeit
 
-    def blockAttack(self, card) -> None:
-        pass
+    def blockAttack(self, attack) -> None:
+        if issubclass(attack, UnitCard):
+            self.HP -= attack.attack
+        elif issubclass(attack, SpellCard):
+            pass
+        elif issubclass(attack, int):
+            self.HP -= attack
+        else:
+            raise TypeError
 
     def awakenField(self) -> None:
         pass
