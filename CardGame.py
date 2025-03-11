@@ -250,11 +250,11 @@ class Player():
         #   forfeit
 
     def blockAttack(self, attack) -> None:
-        if issubclass(attack, UnitCard):
+        if issubclass(type(attack), UnitCard):
             self.HP -= attack.attack
-        elif issubclass(attack, SpellCard):
-            pass
-        elif issubclass(attack, int):
+        elif issubclass(type(attack), SpellCard):
+            raise NotImplementedError
+        elif issubclass(type(attack), int):
             self.HP -= attack
         else:
             raise TypeError
@@ -297,6 +297,37 @@ class LinkedList:
             current.next = Node(card)
         self.size += 1
         
+def playerOrder() -> bool:
+    """Determine player order and validate input. Return True if P1 first"""
+    response = ""
+    heads = re.search(r"(?i)h(?:eads)?", response)
+    tails = re.search(r"(?i)t(?:ails)?", response)
+    player = re.search(r"(?i)p(?:layer)?[ ]?(1|2)$", response)
+    while ((heads is None) and (tails is None) and (player is None)):
+        print(response)
+        response = input("P1 choose heads or tails: ")
+        heads = re.search(r"(?i)h(?:eads)?", response)
+        tails = re.search(r"(?i)t(?:ails)?", response)
+        player = re.search(r"(?i)p(?:layer)?[ ]?(1|2)$", response)
+    
+    # if specified player start
+    if player is not None:
+        playerNum = player.group(1)
+        if playerNum == "1":
+            return True
+        return False
+    
+    heads = (re.search(r"(?i)h(?:eads)?", response) is None)
+    # Coin toss
+    coin = random.randint(0,1)
+    coinString = "Tails!" if coin else "Heads!"
+
+    if (heads and not coin) and (not heads and coin):
+        print(f"{coinString} {player1.name} goes first.")
+        return True
+    print(f"{coinString} {player2.name} goes first.")
+    return False
+
 # from https://stackoverflow.com/questions/517970/how-can-i-clear-the-interpreter-console
 clear = lambda: os.system('cls' if os.name == 'nt' else 'clear')
 
@@ -307,22 +338,7 @@ if __name__ == "__main__":
     player1.drawCards(5)
     player2.drawCards(5)
 
-    # Determine player order and validate input
-    response = ""
-    while ((re.search(r"(?i)h(?:eads)?", response) is None) and (re.search(r"(?i)t(?:ails)?", response) is None)):
-        print(response)
-        response = input("P1 choose heads or tails: ")
-    heads = (re.search(r"(?i)h(?:eads)?", response) is None)
-    # Coin toss
-    coin = random.randint(0,1)
-    coinString = "Tails!" if coin else "Heads!"
-
-    if (heads and not coin) and (not heads and coin):
-        print(f"{coinString} {player1.name} goes first.")
-        p1Turn = True
-    else:
-        print(f"{coinString} {player2.name} goes first.")
-        p1Turn = False
+    p1Turn = playerOrder()
 
     # Create Text Menu with consolemenu
     # menu = consolemenu.ConsoleMenu("Hearthgathering","Play your turn")
@@ -357,17 +373,21 @@ if __name__ == "__main__":
                     selectableUnits.append(unit)
             
             # create blocking menu
+            forfeitItem = consolemenu.items.FunctionItem("Forfeit",currentPlayer.forfeit,should_exit=True)
             for attacker in otherPlayer.attackQueue:
-                blockMenu = consolemenu.ConsoleMenu(title="Block Menu", subtitle=f"Defend against {attacker.name}: ({attacker.attack})-({attacker.HP}/{attacker.maxHP})")
-                blockMenu.exit_item.text = "Forfeit"
-                blockMenu.append_item(consolemenu.items.FunctionItem(f"{currentPlayer.name}: ({currentPlayer.HP}/{currentPlayer.maxHP})",attacker.cast, args=[currentPlayer]))
+                blockMenu = consolemenu.ConsoleMenu(title="Block Menu", subtitle=f"Defend against {attacker.name}: ({attacker.attack} ATK)-({attacker.HP}/{attacker.maxHP} HP)", show_exit_option=False)
+                blockMenu.append_item(consolemenu.items.FunctionItem(f"{currentPlayer.name}: ({currentPlayer.HP}/{currentPlayer.maxHP} HP)",attacker.cast, args=[currentPlayer],should_exit=True))
                 for defender in selectableUnits:
-                    blockMenu.append_item(consolemenu.items.FunctionItem(f"{defender.name}: ({defender.attack})-({defender.HP}/{defender.maxHP})",attacker.cast, args=[defender]))
+                    blockMenu.append_item(consolemenu.items.FunctionItem(f"{defender.name}: ({defender.attack} ATK)-({defender.HP}/{defender.maxHP} HP)",attacker.cast, args=[defender],should_exit=True))
+
+                blockMenu.append_item(forfeitItem)
 
                 blockMenu.show()
                 blockMenu.join()
 
-                if (not currentPlayer.isAlive()) or (blockMenu.exit_item.should_exit):
+                otherPlayer.attackQueue.pop(0)
+
+                if (not currentPlayer.isAlive()):
                     exitCondition = True
 
         exitCondition = True if not currentPlayer.isAlive() else False
@@ -376,7 +396,7 @@ if __name__ == "__main__":
         p1Turn = not p1Turn
         i += 1
         print(i)
-        if i >= 500: # placeholder to prevent being stuck in infinite loop
+        if i >= 100: # placeholder to prevent being stuck in infinite loop
             print("Stuck in inifinite loop. Exiting program.")
             exitCondition = True
 
