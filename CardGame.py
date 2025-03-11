@@ -195,8 +195,27 @@ class Player():
     def forfeit(self) -> None:
         self.HP = -1
 
+    def generateCard(self) -> Card:
+        result = random.randint(0,6)
+        match result:
+            case 0:
+                return Wizard()
+            case 1:
+                return Tank()
+            case 2:
+                return Attacker()
+            case 3:
+                return HealingSpell()
+            case 4:
+                return DamageSpell()
+            case 5:
+                return ShieldSpell()
+            case 6:
+                return DrawCardSpell()
+
     def drawCards(self, numCards: int) -> None:
-        pass
+        for i in range(numCards):
+            self.hand.append(self.generateCard())
 
     def playCard(self, card) -> None:
         card.owner = self
