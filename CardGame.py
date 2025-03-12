@@ -13,10 +13,14 @@ import re
 import os
 import consolemenu
 
+class UnitNotFoundError(Exception):
+    pass
+
 class Card():
     """
     Card class that represents a card in the game. Each card has a name, a description, and a cost.
     """
+
     def __init__(self, name: str, description: str, cost: int):
         self.name = name
         self.cost = cost
@@ -26,24 +30,6 @@ class Card():
     def __str__(self) -> str:
         return f"{self.name}: {self.description}\nMana cost: {self.cost}"
 
-    def __eq__(self, other) -> bool:
-        return self.cost == other.cost
-
-    def __lt__(self, other) -> bool:
-        return self.cost < other.cost
-
-    def __gt__(self, other) -> bool:
-        return self.cost > other.cost
-
-    def __le__(self, other) -> bool:
-        return self.cost <= other.cost
-
-    def __ge__(self, other) -> bool:
-        return self.cost >= other.cost
-
-    def __ne__(self, other) -> bool:
-        return self.cost != other.cost
-    
     def cast(self, target) -> None:
         """override with method that does effects based on target type"""
         raise NotImplementedError
@@ -65,11 +51,26 @@ class UnitCard(Card):
     def isAlive(self) -> bool:
         return self.HP > 0
     
+    def setMaxHP(self, maxHP: int) -> None:
+        self.maxHP = maxHP
+        self.HP = min(self.HP, self.maxHP)
+    
+    def removeFromField(self) -> None:
+        for i, unit in enumerate(self.owner.field):
+            if unit == self:
+                self.owner.field.pop(i)
+                return None
+        raise UnitNotFoundError
+    
     def blockAttack(self, card) -> int:
         # return damage dealt back to attacker
         self.HP -= card.attack
-        if self.HP < 0:
+        # on death
+        if self.HP <= 0:
+            # overkill damage dealt to player
             self.owner.blockAttack(-self.HP)
+            # remove from play
+            self.removeFromField()
         return self.attack
 
 class SpellCard(Card):
@@ -106,6 +107,8 @@ class Tank(UnitCard):
 
     def cast(self, target) -> None:
         self.HP -= target.blockAttack(self)
+        if self.HP <= 0:
+            self.removeFromField()
 
 class Attacker(UnitCard): #  Change to Knight ?
     """
@@ -119,6 +122,8 @@ class Attacker(UnitCard): #  Change to Knight ?
 
     def cast(self, target) -> None:
         self.HP -= target.blockAttack(self)
+        if self.HP <= 0:
+            self.removeFromField()
 
 # Addition: 
 '''
