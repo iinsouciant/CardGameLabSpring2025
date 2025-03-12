@@ -1,78 +1,47 @@
 """
-Some description of each of the cards/classes implemented for this game
+# Libraries:
+    Random library used for coin toss to decide turn order.
+    Regex library to parse user inputs
+    OS library used for clearing console output between turns
+
+    https://pypi.org/project/console-menu/
+    Console-menu library used to simplify displaying and executing text menu functions per turn
 """
 
 import random
+import re
+import os
+import consolemenu
 
-class Player():
-    """
-    Player class that represents a player in the game. Each player has a hand of cards, mana...
-    """
-    def __init__(self, name: str, deck=25, maxHP=20, maxMana=0, shield=0):
-        self.name = name
-        self.shield = shield
-        self.maxHP = maxHP
-        self.HP = maxHP
-        self.maxMana = maxMana
-        self.mana = maxMana
-        self.deck = deck
-        self.hand = [] # contains Card objects in hand that can be played
-        self.field = [] # contains UnitCard objects that can be used
+class UnitNotFoundError(Exception):
+    pass
 
-    def __str__(self) -> str:
-        return f"{self.name} has {self.HP}/{self.maxHP} HP and {self.mana}/{self.maxMana} mana"
-
-    def drawCards(self, numCards: int) -> None:
-        pass
-
-    def playCard(self) -> None:
-        pass
-
-    def isAlive(self) -> bool:
-        if self.HP <= 0:
-            return False
-        elif (self.deck <= 0) and (len(self.hand) == 0):
-            return False
-        return True
-    
-    def startTurn(self) -> None:
-        pass
-
-    def defendDamage(self, dmg: int) -> None:
-        pass
-
-    def awakenField(self) -> None:
-        pass
+class CardNotFoundError(Exception):
+    pass
 
 class Card():
     """
     Card class that represents a card in the game. Each card has a name, a description, and a cost.
     """
+
     def __init__(self, name: str, description: str, cost: int):
         self.name = name
         self.cost = cost
         self.description = description
+        self.owner = None
 
     def __str__(self) -> str:
         return f"{self.name}: {self.description}\nMana cost: {self.cost}"
+    
+    def popFromHand(self):
+        for i, unit in enumerate(self.owner.field):
+            if unit == self:
+                return self.owner.hand.pop(i)
+        raise CardNotFoundError
 
-    def __eq__(self, other) -> bool:
-        return self.cost == other.cost
-
-    def __lt__(self, other) -> bool:
-        return self.cost < other.cost
-
-    def __gt__(self, other) -> bool:
-        return self.cost > other.cost
-
-    def __le__(self, other) -> bool:
-        return self.cost <= other.cost
-
-    def __ge__(self, other) -> bool:
-        return self.cost >= other.cost
-
-    def __ne__(self, other) -> bool:
-        return self.cost != other.cost
+    def cast(self, target) -> None:
+        """override with method that does effects based on target type"""
+        raise NotImplementedError
     
 class UnitCard(Card):
     """
@@ -88,11 +57,29 @@ class UnitCard(Card):
     def __str__(self) -> str:
         return f"{self.name}: {self.description}\nMana cost: {self.cost}\nAttack: {self.attack}\nHP: {self.HP}/{self.maxHP}"
     
-    def attack(self, target) -> None:
-        pass
+    def isAlive(self) -> bool:
+        return self.HP > 0
     
-    def cast(self) -> None:
-        raise NotImplementedError
+    def setMaxHP(self, maxHP: int) -> None:
+        self.maxHP = maxHP
+        self.HP = min(self.HP, self.maxHP)
+    
+    def popFromField(self) -> Card:
+        for i, unit in enumerate(self.owner.field):
+            if unit == self:
+                return self.owner.field.pop(i)
+        raise UnitNotFoundError
+    
+    def blockAttack(self, card) -> int:
+        # return damage dealt back to attacker
+        self.HP -= card.attack
+        # on death
+        if self.HP <= 0:
+            # overkill damage dealt to player
+            self.owner.blockAttack(-self.HP)
+            # remove from play
+            self.popFromField()
+        return self.attack
 
 class SpellCard(Card):
     """
@@ -104,13 +91,6 @@ class SpellCard(Card):
     def __str__(self) -> str:
         return f"{self.name}: {self.description}\nMana cost: {self.cost}"
     
-    def cast(self) -> None:
-        raise NotImplementedError
-
-if __name__ == "__main__":
-    pass
-
-# Class Creation
 # Note: Can Adjust VALUES of cards later on as the game runs to see fit, balance changes 
 
 class Wizard(UnitCard):
@@ -133,6 +113,11 @@ class Tank(UnitCard):
     # Cost: 5-8 mana?
     # Attack: 1 - 2 or 3?
 
+    def cast(self, target) -> None:
+        self.HP -= target.blockAttack(self)
+        if self.HP <= 0:
+            self.popFromField()
+
 class Attacker(UnitCard): #  Change to Knight ?
     """
     Attacker class is a special type of UnitCard that deals large amounts of damage.
@@ -142,6 +127,11 @@ class Attacker(UnitCard): #  Change to Knight ?
     # HP 5 - 8 ; 6 or 7 - 8 HP?
     # Cost: 4 - 5
     # Attack: 5 - 8
+
+    def cast(self, target) -> None:
+        self.HP -= target.blockAttack(self)
+        if self.HP <= 0:
+            self.popFromField()
 
 # Addition: 
 '''
@@ -203,6 +193,103 @@ class DrawCardSpell(SpellCard):
         #self.drawRand = random.randint(1, 2)
     # Randomly generate a number of cards 1 - 2? 
 
+class Player():
+    """
+    Player class that represents a player in the game. Each player has a hand of cards, mana...
+    """
+    def __init__(self, name: str, deck=25, maxHP=20, maxMana=0, shield=0):
+        self.name = name
+        self.shield = shield
+        self.maxHP = maxHP
+        self.HP = maxHP
+        self.maxMana = maxMana
+        self.mana = maxMana
+        self.deck = deck
+        self.hand = [] # contains Card objects in hand that can be played
+        self.field = [] # contains UnitCard objects that can be used
+        self.attackQueue = [] # used to hold what cards are being attacked with for opponent's block phase
+
+    def __str__(self) -> str:
+        return f"{self.name} has {self.HP}/{self.maxHP} HP and {self.mana}/{self.maxMana} mana"
+    
+    def forfeit(self) -> None:
+        self.HP = -1
+
+    def generateCard(self) -> Card:
+        result = random.randint(0,6)
+        match result:
+            case 0:
+                return Wizard()
+            case 1:
+                return Tank()
+            case 2:
+                return Attacker()
+            case 3:
+                return HealingSpell()
+            case 4:
+                return DamageSpell()
+            case 5:
+                return ShieldSpell()
+            case 6:
+                return DrawCardSpell()
+
+    def drawCards(self, numCards: int) -> None:
+        for i in range(numCards):
+            self.hand.append(self.generateCard())
+
+    def playCard(self, card) -> None:
+        # put unit on field or cast at target if spell
+        card.owner = self
+        # handle card special effects here
+        if issubclass(type(card), UnitCard):
+            self.field.append(card)
+            card.asleep = True
+            return None
+        elif issubclass(type(card), SpellCard):
+            # how to handle if issubclass(type(card), SpellCard)?
+            raise NotImplementedError
+        else: 
+            raise TypeError
+
+    def isAlive(self) -> bool:
+        if self.HP <= 0:
+            return False
+        elif (self.deck <= 0) and (len(self.hand) == 0):
+            return False
+        return True
+    
+    def startTurn(self) -> None:
+        # Start turn sequence
+        print(f"Starting turn for {self.name}.")
+        
+        # draw 1 card, self.maxMana = min(10, self.maxMana + 1), self.mana = self.maxMana, attackQueue emptied
+        # awaken units
+        # print field
+        # prompt with menu:
+        #   play card from hand (print out names and atk/hp of cards in hand -> play unit from hand to field, or cast spell at a target)
+        #   use card in field (choose a card and activate ability or have attack opposite player)
+        #   print out field state again
+        #   end turn
+        #   forfeit
+
+    def blockAttack(self, attack) -> None:
+        if issubclass(type(attack), UnitCard):
+            self.HP -= attack.attack
+        elif issubclass(type(attack), SpellCard):
+            raise NotImplementedError
+        elif issubclass(type(attack), int):
+            self.HP -= attack
+        else:
+            raise TypeError
+
+    def awakenField(self) -> None:
+        for unit in self.field:
+            unit.asleep = False
+
+    def attackWithCard(self, card) -> None:
+        self.attackQueue.append(card)
+
+
 '''
 Requirements (Updated):
 # Create the Player class to track health, deck state, etc and handle drawing and playing cards.
@@ -235,3 +322,123 @@ class LinkedList:
                 current = current.next
             current.next = Node(card)
         self.size += 1
+        
+def playerOrder() -> bool:
+    """Determine player order and validate input. Return True if P1 first"""
+    response = ""
+    heads = re.search(r"(?i)h(?:eads)?$", response)
+    tails = re.search(r"(?i)t(?:ails)?$", response)
+    player = re.search(r"(?i)p(?:layer)?[ ]?(1|2)$", response)
+    while ((heads is None) and (tails is None) and (player is None)):
+        print(response)
+        response = input("P1 choose heads or tails: ")
+        heads = re.search(r"(?i)h(?:eads)?$", response)
+        tails = re.search(r"(?i)t(?:ails)?$", response)
+        player = re.search(r"(?i)p(?:layer)?[ ]?(1|2)$", response)
+    
+    # if specified player start
+    if player is not None:
+        playerNum = player.group(1)
+        if playerNum == "1":
+            return True
+        return False
+    
+    resultIsTails = (tails is not None)
+    # Coin toss
+    coinIsTails = random.randint(0,1)
+    coinString = "Tails!" if coinIsTails else "Heads!"
+
+    if (resultIsTails and coinIsTails) or (not resultIsTails and not coinIsTails):
+        print(f"{coinString} {player1.name} goes first.")
+        return True
+    print(f"{coinString} {player2.name} goes first.")
+    return False
+
+# from https://stackoverflow.com/questions/517970/how-can-i-clear-the-interpreter-console
+clear = lambda: os.system('cls' if os.name == 'nt' else 'clear')
+
+if __name__ == "__main__":
+    print("Starting game...\n")
+    player1 = Player(input("Enter name for player 1 (P1): "))
+    player2 = Player(input("Enter name for player 2 (P2): "))
+    player1.drawCards(5)
+    player2.drawCards(5)
+
+    p1Turn = playerOrder()
+
+    # Create Text Menu with consolemenu
+    # menu = consolemenu.ConsoleMenu("Hearthgathering","Play your turn")
+
+
+    testCard1 = Attacker()
+    testCard2 = Tank()
+    testCard3 = Attacker()
+    testCard2.setMaxHP(1)
+    testCard4 = Tank()
+    # Main loop to proceed with turns while someone has not lost/requested for game exit
+    exitCondition = False
+    currentPlayer = None
+    turnCount = 0
+    while exitCondition == False:
+        if p1Turn:
+           currentPlayer, otherPlayer = player1, player2
+        else:
+            currentPlayer, otherPlayer = player2, player1
+
+        currentPlayer.startTurn()
+        if not turnCount:
+            otherPlayer.attackQueue.append(testCard1)
+            otherPlayer.field.append(testCard1)
+            otherPlayer.attackQueue.append(testCard3)
+            otherPlayer.field.append(testCard3)
+            currentPlayer.playCard(testCard4)
+            currentPlayer.playCard(testCard2)
+            currentPlayer.awakenField()
+
+        # turn swap after player turn ends
+        p1Turn = not p1Turn
+        if p1Turn:
+           currentPlayer, otherPlayer = player1, player2
+        else:
+            currentPlayer, otherPlayer = player2, player1
+        clear()
+        exitCondition = True if not currentPlayer.isAlive() else False
+        turnCount += 1
+        print(f"Turn {turnCount}")
+        if turnCount >= 100: 
+            print("Reached turn limit. Exiting program.")
+            exit()
+
+        # Block phase
+        if len(otherPlayer.attackQueue) > 0:
+            # create a menu that allows player to select and unselect any number of available units on field
+            # create a menu option to confirm ending block phase
+            # ending block phase computes player health then computes unit health/death
+            selectableUnits = []
+            for unit in currentPlayer.field:
+                if unit.asleep is not True:
+                    selectableUnits.append(unit)
+            
+            # create blocking menu
+            forfeitItem = consolemenu.items.FunctionItem("Forfeit",currentPlayer.forfeit,should_exit=True)
+            for attacker in otherPlayer.attackQueue:
+                blockMenu = consolemenu.ConsoleMenu(title="Block Menu", subtitle=f"Defend against {attacker.name}: ({attacker.attack} ATK)-({attacker.HP}/{attacker.maxHP} HP)", show_exit_option=False)
+                blockMenu.append_item(consolemenu.items.FunctionItem(f"{currentPlayer.name}: ({currentPlayer.HP}/{currentPlayer.maxHP} HP)",attacker.cast, args=[currentPlayer],should_exit=True))
+                for defender in selectableUnits:
+                    blockMenu.append_item(consolemenu.items.FunctionItem(f"{defender.name}: ({defender.attack} ATK)-({defender.HP}/{defender.maxHP} HP)",attacker.cast, args=[defender],should_exit=True))
+                blockMenu.append_item(forfeitItem)
+                blockMenu.show()
+                blockMenu.join()
+                # remove attacker once done
+                otherPlayer.attackQueue.pop(0)
+                # check if player has died from attack or ff'ed
+                exitCondition = True if not currentPlayer.isAlive() else False
+
+
+    # Win message
+    if currentPlayer.isAlive():
+        loser, winner = otherPlayer, currentPlayer
+    else:
+        winner, loser = otherPlayer, currentPlayer
+    print(f"{loser.name} is dead! {winner.name} wins!")
+            
