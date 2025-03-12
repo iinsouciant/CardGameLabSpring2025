@@ -28,6 +28,7 @@ Depicted below is the Unified Modeling Language (UML) Diagram for the Homebrew C
 
 ## UML Diagram
 
+- Used Figma to construct activity diagram: [Access here](https://www.figma.com/)
 - TBD
 
 ### UML Activity Diagram Index
@@ -37,5 +38,5 @@ Depicted below is the Unified Modeling Language (UML) Diagram for the Homebrew C
 
 ## Division of Labor Documentation
 
-- Used VSCode "Git Graph" Installation (Extension): https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph
+- Used VSCode "Git Graph" Installation (Extension): [Access here](https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph)
 - TBD
