@@ -16,6 +16,9 @@ import consolemenu
 class UnitNotFoundError(Exception):
     pass
 
+class CardNotFoundError(Exception):
+    pass
+
 class Card():
     """
     Card class that represents a card in the game. Each card has a name, a description, and a cost.
@@ -29,6 +32,12 @@ class Card():
 
     def __str__(self) -> str:
         return f"{self.name}: {self.description}\nMana cost: {self.cost}"
+    
+    def popFromHand(self):
+        for i, unit in enumerate(self.owner.field):
+            if unit == self:
+                return self.owner.hand.pop(i)
+        raise CardNotFoundError
 
     def cast(self, target) -> None:
         """override with method that does effects based on target type"""
@@ -55,11 +64,10 @@ class UnitCard(Card):
         self.maxHP = maxHP
         self.HP = min(self.HP, self.maxHP)
     
-    def removeFromField(self) -> None:
+    def popFromField(self) -> Card:
         for i, unit in enumerate(self.owner.field):
             if unit == self:
-                self.owner.field.pop(i)
-                return None
+                return self.owner.field.pop(i)
         raise UnitNotFoundError
     
     def blockAttack(self, card) -> int:
@@ -70,7 +78,7 @@ class UnitCard(Card):
             # overkill damage dealt to player
             self.owner.blockAttack(-self.HP)
             # remove from play
-            self.removeFromField()
+            self.popFromField()
         return self.attack
 
 class SpellCard(Card):
@@ -108,7 +116,7 @@ class Tank(UnitCard):
     def cast(self, target) -> None:
         self.HP -= target.blockAttack(self)
         if self.HP <= 0:
-            self.removeFromField()
+            self.popFromField()
 
 class Attacker(UnitCard): #  Change to Knight ?
     """
@@ -123,7 +131,7 @@ class Attacker(UnitCard): #  Change to Knight ?
     def cast(self, target) -> None:
         self.HP -= target.blockAttack(self)
         if self.HP <= 0:
-            self.removeFromField()
+            self.popFromField()
 
 # Addition: 
 '''
