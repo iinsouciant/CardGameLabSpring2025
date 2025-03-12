@@ -24,7 +24,7 @@ Each person will submit the code indiviudally, but leave a comment on who you wo
 
 # Planning Write Up
 
-Depicted below is the Unified Modeling Language (UML) Diagram for the Homebrew Card Game known as Hearthgathering... ; 
+Depicted below is the Unified Modeling Language (UML) Diagram for the Homebrew Card Game known as Hearthgathering and the division of labor documentation. Team members have communicated online and in meetings or voice calls to discuss potential ideas, implementations, clarifications, error debugging, application usage, and more!
 
 ## UML Diagram
 
