@@ -324,14 +324,14 @@ class LinkedList:
 def playerOrder() -> bool:
     """Determine player order and validate input. Return True if P1 first"""
     response = ""
-    heads = re.search(r"(?i)h(?:eads)?", response)
-    tails = re.search(r"(?i)t(?:ails)?", response)
+    heads = re.search(r"(?i)h(?:eads)?$", response)
+    tails = re.search(r"(?i)t(?:ails)?$", response)
     player = re.search(r"(?i)p(?:layer)?[ ]?(1|2)$", response)
     while ((heads is None) and (tails is None) and (player is None)):
         print(response)
         response = input("P1 choose heads or tails: ")
-        heads = re.search(r"(?i)h(?:eads)?", response)
-        tails = re.search(r"(?i)t(?:ails)?", response)
+        heads = re.search(r"(?i)h(?:eads)?$", response)
+        tails = re.search(r"(?i)t(?:ails)?$", response)
         player = re.search(r"(?i)p(?:layer)?[ ]?(1|2)$", response)
     
     # if specified player start
@@ -341,12 +341,12 @@ def playerOrder() -> bool:
             return True
         return False
     
-    heads = (re.search(r"(?i)h(?:eads)?", response) is None)
+    resultIsTails = (tails is not None)
     # Coin toss
-    coin = random.randint(0,1)
-    coinString = "Tails!" if coin else "Heads!"
+    coinIsTails = random.randint(0,1)
+    coinString = "Tails!" if coinIsTails else "Heads!"
 
-    if (heads and not coin) and (not heads and coin):
+    if (resultIsTails and coinIsTails) or (not resultIsTails and not coinIsTails):
         print(f"{coinString} {player1.name} goes first.")
         return True
     print(f"{coinString} {player2.name} goes first.")
@@ -378,7 +378,6 @@ if __name__ == "__main__":
     currentPlayer = None
     turnCount = 0
     while exitCondition == False:
-        clear()
         if p1Turn:
            currentPlayer, otherPlayer = player1, player2
         else:
