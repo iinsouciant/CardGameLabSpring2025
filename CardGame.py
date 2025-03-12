@@ -257,20 +257,6 @@ class Player():
         elif (self.deck <= 0) and (len(self.hand) == 0):
             return False
         return True
-    
-    def startTurn(self) -> None:
-        # Start turn sequence
-        print(f"Starting turn for {self.name}.")
-        
-        # draw 1 card, self.maxMana = min(10, self.maxMana + 1), self.mana = self.maxMana, attackQueue emptied
-        # awaken units
-        # print field
-        # prompt with menu:
-        #   play card from hand (print out names and atk/hp of cards in hand -> play unit from hand to field, or cast spell at a target)
-        #   use card in field (choose a card and activate ability or have attack opposite player)
-        #   print out field state again
-        #   end turn
-        #   forfeit
 
     '''
     def startTurn(self) -> None:
