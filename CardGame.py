@@ -368,9 +368,11 @@ if __name__ == "__main__":
     # menu = consolemenu.ConsoleMenu("Hearthgathering","Play your turn")
 
 
-    testCard1 = UnitCard("test", "test", 3, 1, 2)
-    testCard2 = UnitCard("test", "test", 3, 1, 1)
-    testCard2.asleep = False
+    testCard1 = Attacker()
+    testCard2 = Tank()
+    testCard3 = Attacker()
+    testCard2.setMaxHP(1)
+    testCard4 = Tank()
     # Main loop to proceed with turns while someone has not lost/requested for game exit
     exitCondition = False
     currentPlayer = None
@@ -383,8 +385,14 @@ if __name__ == "__main__":
             currentPlayer, otherPlayer = player2, player1
 
         currentPlayer.startTurn()
-        currentPlayer.attackQueue.append(testCard1)
-        currentPlayer.field.append(testCard2)
+        if not turnCount:
+            otherPlayer.attackQueue.append(testCard1)
+            otherPlayer.field.append(testCard1)
+            otherPlayer.attackQueue.append(testCard3)
+            otherPlayer.field.append(testCard3)
+            currentPlayer.playCard(testCard4)
+            currentPlayer.playCard(testCard2)
+            currentPlayer.awakenField()
 
         # turn swap after player turn ends
         p1Turn = not p1Turn
