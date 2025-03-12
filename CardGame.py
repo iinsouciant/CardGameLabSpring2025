@@ -238,8 +238,18 @@ class Player():
             self.hand.append(self.generateCard())
 
     def playCard(self, card) -> None:
-        card.owner = self
         # put unit on field or cast at target if spell
+        card.owner = self
+        # handle card special effects here
+        if issubclass(type(card), UnitCard):
+            self.field.append(card)
+            card.asleep = True
+            return None
+        elif issubclass(type(card), SpellCard):
+            # how to handle if issubclass(type(card), SpellCard)?
+            raise NotImplementedError
+        else: 
+            raise TypeError
 
     def isAlive(self) -> bool:
         if self.HP <= 0:
@@ -273,7 +283,8 @@ class Player():
             raise TypeError
 
     def awakenField(self) -> None:
-        pass
+        for unit in self.field:
+            unit.asleep = False
 
     def attackWithCard(self, card) -> None:
         self.attackQueue.append(card)
