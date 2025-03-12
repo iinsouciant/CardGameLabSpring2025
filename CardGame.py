@@ -272,6 +272,62 @@ class Player():
         #   end turn
         #   forfeit
 
+    '''
+    def startTurn(self) -> None:
+        # Start turn sequence
+        print(f"Starting turn for {self.name}.")
+        
+        # draw 1 card, self.maxMana = min(10, self.maxMana + 1), self.mana = self.maxMana, attackQueue emptied
+        
+        self.drawCards(1)
+        self.maxMana = min(10, self.maxMana + 1)
+        self.mana = self.maxMana
+        # self.attackQueue = [] # empty the attack que
+
+        # awaken units
+        for unit in self.field:
+            unit.awake = True # unit card possesses awake 
+        
+        # Instructions
+        #- print field
+        
+        pass
+
+        #- prompt with menu:
+        #-    play card from hand (print out names and atk/hp of cards in hand -> play unit from hand to field, or cast spell at a target)
+        #-    use card in field (choose a card and activate ability or have attack opposite player)
+        #-    print out field state again
+        #-    end turn
+        #-    forfeit
+
+        while True:
+            print("\nSelect one of the following actions below: ")
+            print("Enter an integer value (ex. 1, 2, 3, 4, 5)")
+            print("================================================")
+            print("1. Play card from hand (Units placing/Spell usage)")
+            print("2. Use a card on the field (Activate ability/ATK Opponent)")
+            print("3. View field state")
+            print("4. End turn")
+            print("5. Forfeit")
+
+            selection = input("--> ")   
+
+            if selection == "1":
+                # play card from hand
+            elif selection == "2":
+                # use card on field
+            elif selection == "3":
+                # print field
+            elif selection == "4":
+                print(f"{self.name} has ended their turn.")
+                break # terminate loop
+            elif selection == "5":
+                print(f"{self.name} has forfeited the game.")
+                exit() # terimate the program
+            else:
+                print("Option is not valid, please try again.")
+    '''
+
     def blockAttack(self, attack) -> None:
         if issubclass(type(attack), UnitCard):
             self.HP -= attack.attack
