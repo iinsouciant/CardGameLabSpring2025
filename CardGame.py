@@ -396,6 +396,17 @@ if __name__ == "__main__":
 
         # turn swap after player turn ends
         p1Turn = not p1Turn
+        if p1Turn:
+           currentPlayer, otherPlayer = player1, player2
+        else:
+            currentPlayer, otherPlayer = player2, player1
+        clear()
+        exitCondition = True if not currentPlayer.isAlive() else False
+        turnCount += 1
+        print(f"Turn {turnCount}")
+        if turnCount >= 100: 
+            print("Reached turn limit. Exiting program.")
+            exit()
 
         # Block phase
         if len(otherPlayer.attackQueue) > 0:
@@ -422,12 +433,6 @@ if __name__ == "__main__":
                 # check if player has died from attack or ff'ed
                 exitCondition = True if not currentPlayer.isAlive() else False
 
-        exitCondition = True if not currentPlayer.isAlive() else False
-        turnCount += 1
-        print(f"Turn {turnCount}")
-        if turnCount >= 100: 
-            print("Reached turn limit. Exiting program.")
-            exit()
 
     # Win message
     if currentPlayer.isAlive():
