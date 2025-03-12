@@ -354,19 +354,26 @@ Requirements (Updated):
 - Multiple types of cards, distinct classes that inherit from a basic Card class
 - Cards WILL BE HELD in a linked list as a deck (be removed from the deck as the game is played)
 '''
-class Node:
+
+# null (none) to indicate end of the list
+class Node: 
     def __init__(self, card):
         self.card = card
         self.next = None
 
 class LinkedList:
-    def __init__(self):
+    def __init__(self, maxCards = 50): # Can change amount of cards maximum in deck later, each player starts wtih 25 cards
         self.head = None
         self.size = 0
+        self.maxCards = maxCards
 
-    def draw(self): 
-        if not self.head:
-            return None
+    def drawCard(self): 
+        if not self.head: # Check If the deck is empty
+            return None 
+        drawn = self.head.card
+        self.head = self.head.next
+        self.size -= 1
+        return drawn
 
     # "Potentially added back to the deck too" if needed
     def append(self, card): 
@@ -387,7 +394,7 @@ def playerOrder() -> bool:
     player = re.search(r"(?i)p(?:layer)?[ ]?(1|2)$", response)
     while ((heads is None) and (tails is None) and (player is None)):
         print(response)
-        response = input("P1 choose heads or tails: ")
+        response = input("P1 choose \"heads\" or \"tails\": ")
         heads = re.search(r"(?i)h(?:eads)?$", response)
         tails = re.search(r"(?i)t(?:ails)?$", response)
         player = re.search(r"(?i)p(?:layer)?[ ]?(1|2)$", response)
