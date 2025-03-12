@@ -386,6 +386,9 @@ if __name__ == "__main__":
         currentPlayer.attackQueue.append(testCard1)
         currentPlayer.field.append(testCard2)
 
+        # turn swap after player turn ends
+        p1Turn = not p1Turn
+
         # Block phase
         if len(otherPlayer.attackQueue) > 0:
             # create a menu that allows player to select and unselect any number of available units on field
@@ -410,9 +413,6 @@ if __name__ == "__main__":
                 otherPlayer.attackQueue.pop(0)
                 # check if player has died from attack or ff'ed
                 exitCondition = True if not currentPlayer.isAlive() else False
-
-        # turn swap before end of loop
-        p1Turn = not p1Turn
 
         exitCondition = True if not currentPlayer.isAlive() else False
         turnCount += 1
