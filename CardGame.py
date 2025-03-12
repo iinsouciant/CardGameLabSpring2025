@@ -374,7 +374,7 @@ if __name__ == "__main__":
     # Main loop to proceed with turns while someone has not lost/requested for game exit
     exitCondition = False
     currentPlayer = None
-    i = 0
+    turnCount = 0
     while exitCondition == False:
         clear()
         if p1Turn:
@@ -403,26 +403,23 @@ if __name__ == "__main__":
                 blockMenu.append_item(consolemenu.items.FunctionItem(f"{currentPlayer.name}: ({currentPlayer.HP}/{currentPlayer.maxHP} HP)",attacker.cast, args=[currentPlayer],should_exit=True))
                 for defender in selectableUnits:
                     blockMenu.append_item(consolemenu.items.FunctionItem(f"{defender.name}: ({defender.attack} ATK)-({defender.HP}/{defender.maxHP} HP)",attacker.cast, args=[defender],should_exit=True))
-
                 blockMenu.append_item(forfeitItem)
-
                 blockMenu.show()
                 blockMenu.join()
-
+                # remove attacker once done
                 otherPlayer.attackQueue.pop(0)
+                # check if player has died from attack or ff'ed
+                exitCondition = True if not currentPlayer.isAlive() else False
 
-                if (not currentPlayer.isAlive()):
-                    exitCondition = True
+        # turn swap before end of loop
+        p1Turn = not p1Turn
 
         exitCondition = True if not currentPlayer.isAlive() else False
-
-        
-        p1Turn = not p1Turn
-        i += 1
-        print(i)
-        if i >= 100: # placeholder to prevent being stuck in infinite loop
-            print("Stuck in inifinite loop. Exiting program.")
-            exitCondition = True
+        turnCount += 1
+        print(f"Turn {turnCount}")
+        if turnCount >= 100: 
+            print("Reached turn limit. Exiting program.")
+            exit()
 
     # Win message
     if currentPlayer.isAlive():
