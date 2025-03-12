@@ -424,6 +424,10 @@ if __name__ == "__main__":
             print("Stuck in inifinite loop. Exiting program.")
             exitCondition = True
 
-    print(f"{currentPlayer.name} is dead! {otherPlayer.name} wins!")
+    # Win message
+    if currentPlayer.isAlive():
+        loser, winner = otherPlayer, currentPlayer
+    else:
+        winner, loser = otherPlayer, currentPlayer
+    print(f"{loser.name} is dead! {winner.name} wins!")
             
-
