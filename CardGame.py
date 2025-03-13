@@ -93,6 +93,17 @@ class SpellCard(Card):
     
 # Note: Can Adjust VALUES of cards later on as the game runs to see fit, balance changes 
 
+# Change
+'''
+units = [
+        ("Wizard", 4, 4, 6),
+        ("Tank", 6, 2, 12),
+        ("Knight", 5, 5, 7),
+        ("Archer", 3, 3, 5),
+        ("Bandit", 2, 4, 2),
+    ]
+'''
+
 class Wizard(UnitCard):
     """
     Wizard class is a special type of UnitCard that posseses magical abilities; a unit that boosts card spells.
