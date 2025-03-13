@@ -45,6 +45,8 @@ Winning Conditions:
 - Nothing on the field placed by them
 - No more HP
 
+Additional Condition: Player A wins by default if a forfeit is called by a Player B. 
+
 Player Actions per Turn (PRINTS OUT EACH TURN):
 - Can choose one action per unit
 - Attack
