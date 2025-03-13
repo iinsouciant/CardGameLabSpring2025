@@ -1,6 +1,6 @@
-Information about (Game)
+**Information about (Game)**
 
-**NOTE**: Anything listed in this brainstorm is theoretical and provides an idea for the developing game. Some fundamentals, features, and units or spells may have not been added yet but will potentially be implemented in the future.
+<ins>**NOTE**: Anything listed in this brainstorm is theoretical and provides an idea for the developing game. Some fundamentals, features, and units or spells may have not been added yet but will potentially be implemented in the future.</ins>
 
 ----------------------------------------------------
 
