@@ -353,7 +353,7 @@ def spellHealing(player, opponent):
 # ================================================================================================================
 
 # Game functions 
-def buildDeck(numCards = 30): # default size in deck
+def buildDeck(numCards=30): # default size in deck
     """
     - Builds a random deck (LinkedList) of 25 cards (for each player minimum).
     """
