@@ -271,7 +271,7 @@ class Player:
             \n{self.name} hand: {[str(c) for c in self.hand]}", show_exit_option=False, clear_screen=False)
 
             # submenu for available units in field to attack with
-            unitAttackSubmenu = consolemenu.ConsoleMenu(title=f"Attack {self.opponent.name} with Units on Field")
+            unitAttackSubmenu = consolemenu.ConsoleMenu(title=f"Attack {self.opponent.name} with Units on Field", subtitle="Units must wait one turn to attack or defend")
             unitAttackSubmenuItem = SubmenuItem("Attack with units", submenu=unitAttackSubmenu, should_exit=True)
             for unit in self.field:
                 if unit.canAttack:
