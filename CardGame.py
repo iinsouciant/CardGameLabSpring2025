@@ -447,7 +447,7 @@ def main():
     print("A simple digital collectible card game...!")
     print("=========================================")
     p1Deck = buildDeck(30) # How many cards in deck setter (deck at least 25 cards), random deck build
-    p2Deck = buildDeck(6) # If set at 6 for example, no cards will be drawn empty deck, # 1 or 0 to test if no cards and no deck error
+    p2Deck = buildDeck(30) # If set at 6 for example, no cards will be drawn empty deck, # 1 or 0 to test if no cards and no deck error
     player1 = Player(input("Enter name for player 1 (P1): "), p1Deck)
     player2 = Player(input("Enter name for player 2 (P2): "), p2Deck)
     player1.drawCards(5) # adjust if needed start with 5 as in brainstorms
