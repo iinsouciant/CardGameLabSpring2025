@@ -300,7 +300,7 @@ class Player:
                         spellTargetSubmenu.append_item(FunctionItem(f"{self.opponent.name}\'s {unit.name}: ({unit.ATK} ATK)-({unit.HP} HP)", self.playCardFromHand, args=[card,unit],should_exit=True))
                     spellPlaySubmenu.append_item(spellTargetSubmenuItem)
             # print field state
-            fieldStateItem = FunctionItem("Print field state", self.printBoard, should_exit=True)
+            fieldStateItem = FunctionItem("Print field state", self.printBoard, should_exit=False)
             # end turn
             endTurnItem = FunctionItem("End turn", self.endTurn, should_exit=True)
             # ff 
