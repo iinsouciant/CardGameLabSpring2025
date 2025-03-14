@@ -53,3 +53,10 @@ Depicted below is the Unified Modeling Language (UML) Diagram for the Homebrew C
 --------------------------------------------------------------------------------------------------------------
 
 ## Works Cited
+
+https://pypi.org/project/console-menu/
+https://stackoverflow.com/questions/517970/how-can-i-clear-the-interpreter-console
+https://stackoverflow.com/questions/6824681/get-a-random-boolean-in-python
+https://figma.com/
+https://www.geeksforgeeks.org/python-linked-list/
+https://www.geeksforgeeks.org/linked-list-data-structure/
