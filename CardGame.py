@@ -283,12 +283,12 @@ class Player:
                 if issubclass(type(card), UnitCard):
                     unitPlaySubmenu.append_item(FunctionItem(f"{card.name} (M:{card.cost}): ({card.ATK} ATK)-({card.HP} HP)", self.playCardFromHand, args=[card],should_exit=True))
             # submenu for spells in hand to play
-            spellPlaySubmenu = consolemenu.ConsoleMenu(title=f"Cast a spell from your hand then target", clear_screen=False)
+            spellPlaySubmenu = consolemenu.ConsoleMenu(title=f"(Mana={self.mana}/{self.maxMana}) Cast a spell from your hand then target", clear_screen=False)
             spellPlaySubmenuItem = SubmenuItem("Play spells from hand", submenu=spellPlaySubmenu, should_exit=True)
-            for card in self.hand:
+            for card in self.hand: # TODO for draw card, don't allow targeting of units
                 if issubclass(type(card), SpellCard):
                     spellTargetSubmenu = consolemenu.ConsoleMenu(title=f"Pick a target to cast {card.name} on", clear_screen=False)
-                    spellTargetSubmenuItem = SubmenuItem(str(card), submenu=spellTargetSubmenu)
+                    spellTargetSubmenuItem = SubmenuItem(str(card), submenu=spellTargetSubmenu, should_exit=True)
                     # target self
                     spellTargetSubmenu.append_item(FunctionItem(f"{self.name}: ({self.HP} HP)", self.playCardFromHand, args=[card,self],should_exit=True))
                     # target opponent
