@@ -1,7 +1,7 @@
 # Homebrew Card Game
 For this lab, you will be joining with a new group to create a homebrewed card game of your own in the style of games like Magic: The Gathering and Hearthstone. This card game will familiarize you with the use of inheritance and polymorphism in python, as well as implementing a linked list data structure.
 
-###  The Card Game
+###  The Card Game (Example)
 The card game will consist of two players, each with a deck of at least 25 cards, taking turns playing cards until they have reduced their opponent's HP to 0 at which point they win. Each player will draw a hand of cards at the start of the game, and continue drawing at the start of their turn.
 
 There must be a deck of cards of multiple, distinct classes that inherit from a basic Card class. The child classes should extend the Card class with real differences between the classes (regular cards vs wild cards in Uno for example).
