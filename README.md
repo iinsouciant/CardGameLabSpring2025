@@ -68,7 +68,7 @@ UML/Activity:
 - https://www.figma.com/figjam/
 - https://www.geeksforgeeks.org/unified-modeling-language-uml-activity-diagrams/
 
-Websites/Menu/Card Implementations + Potential Learning Data Plot/Matplot Graphing:
+Websites/Menu/Card Implementations + Potential Learning Data Plot/Matplot Graphing Testing (LB Week 3):
 - https://www.geeksforgeeks.org/python-linked-list/
 - https://www.geeksforgeeks.org/linked-list-data-structure/
 - CIST5B_Lecture Slides, Clarifying Questions: Erox1, Sawan
