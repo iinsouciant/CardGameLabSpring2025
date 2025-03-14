@@ -59,6 +59,9 @@ Modules:
 - https://stackoverflow.com/questions/517970/how-can-i-clear-the-interpreter-console
 - https://stackoverflow.com/questions/6824681/get-a-random-boolean-in-python
 - https://docs.python.org/3/library/index.html
+- https://docs.python.org/3/library/os.html
+- https://docs.python.org/3/library/re.html
+- https://docs.python.org/3/library/unittest.html
 
 UML/Activity:
 - https://figma.com/
