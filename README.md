@@ -28,7 +28,7 @@ Depicted below is the Unified Modeling Language (UML) Diagram for the Homebrew C
 
 ## UML Diagram
 
-- UML Diagram Direct Link: ...
+- UML Diagram Direct Link: [Click Here](https://www.figma.com/design/ZAT4exR8Jx8FklSM1mpZ9g/CardGameLabSpring2025-UML-Activity-Diagram-(Leo%2C-Ryan)---Shareable?t=LN0FlmDajU9uAjBW-1)
 - Used Figma to construct activity diagram (normal website): [Access here](https://www.figma.com/)
 ![image](https://github.com/user-attachments/assets/be77eb81-bf0e-4393-9d4e-d101e44be735)
 
