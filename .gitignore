@@ -1,0 +1,5 @@
+*
+!.gitignore
+!CardGame.py
+!*.md
+!requirements.txt
