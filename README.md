@@ -41,6 +41,9 @@ Depicted below is the Unified Modeling Language (UML) Diagram for the Homebrew C
 - Used VSCode __"Git Graph"__ Installation (Extension): [Access here](https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph)
   - _Git graph is implemented into the code (visualization example below)._
  
+    ![image](https://github.com/user-attachments/assets/624e3797-4151-4496-b9af-4a10a8957a69)
+
+ 
 <ins>**Both team members have worked together on various sections of the project to make it gel although primary tasks were delegated.**</ins>
 - __Leo (Main task)__: Creating classes for UnitCards, SpellCards, track health, deck state, and more and also to handle drawing and playing cards.
 - __Ryan (Main task)__: Game logic prompting player objects to be used for the game, names, decide player order, determine win/loss condition occurred, initiate attack/defend sequence, and more. 
