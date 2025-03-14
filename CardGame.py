@@ -266,26 +266,28 @@ class Player:
         i = 0
 
         while not endTurn:
-            mainTurnMenu = consolemenu.ConsoleMenu(title=f"Main Phase - Round {roundCount}", subtitle=f"{self.name}'s TURN (HP={self.HP}, Mana={self.mana}/{self.maxMana})\n{self.name}\'s field: {[str(u) for u in self.field]}", show_exit_option=False)
+            mainTurnMenu = consolemenu.ConsoleMenu(title=f"Main Phase - Round {roundCount}", subtitle=f"{self.name}'s TURN (HP={self.HP}, Mana={self.mana}/{self.maxMana})\
+            \n{self.name}\'s field: {[str(u) for u in self.field]}\
+            \n{self.name} hand: {[str(c) for c in self.hand]}", show_exit_option=False, clear_screen=False)
 
             # submenu for available units in field to attack with
             unitAttackSubmenu = consolemenu.ConsoleMenu(title=f"Attack {self.opponent.name} with Units on Field")
             unitAttackSubmenuItem = SubmenuItem("Attack with units", submenu=unitAttackSubmenu, should_exit=True)
             for unit in self.field:
                 if unit.canAttack:
-                    unitAttackSubmenu.append_item(FunctionItem(f"{unit.name}: ({unit.ATK} ATK)-({unit.HP}/{unit.maxHP} HP)", self.unitAttack, args=[unit], should_exit=True))
+                    unitAttackSubmenu.append_item(FunctionItem(f"{unit.name}: ({unit.ATK} ATK)-({unit.HP} HP)", self.unitAttack, args=[unit], should_exit=True))
             # submenu for units in hand to play (will need to validate cost on playing)
             unitPlaySubmenu = consolemenu.ConsoleMenu(title=f"Place Unit on Field")
-            unitPlaySubmenuItem = SubmenuItem("Play units from hand", submenu=unitPlaySubmenu)
+            unitPlaySubmenuItem = SubmenuItem("Play units from hand", submenu=unitPlaySubmenu, should_exit=True)
             for card in self.hand:
                 if issubclass(type(card), UnitCard):
                     unitPlaySubmenu.append_item(FunctionItem(f"{card.name} (M:{card.cost}): ({card.ATK} ATK)-({card.HP} HP)", self.playCardFromHand, args=[card],should_exit=True))
             # submenu for spells in hand to play
-            spellPlaySubmenu = consolemenu.ConsoleMenu(title=f"Cast a spell from your hand then target")
-            spellPlaySubmenuItem = SubmenuItem("Play spells from hand", submenu=spellPlaySubmenu)
+            spellPlaySubmenu = consolemenu.ConsoleMenu(title=f"Cast a spell from your hand then target", clear_screen=False)
+            spellPlaySubmenuItem = SubmenuItem("Play spells from hand", submenu=spellPlaySubmenu, should_exit=True)
             for card in self.hand:
                 if issubclass(type(card), SpellCard):
-                    spellTargetSubmenu = consolemenu.ConsoleMenu(title=f"Pick a target to cast {card.name} on")
+                    spellTargetSubmenu = consolemenu.ConsoleMenu(title=f"Pick a target to cast {card.name} on", clear_screen=False)
                     spellTargetSubmenuItem = SubmenuItem(str(card), submenu=spellTargetSubmenu)
                     # target self
                     spellTargetSubmenu.append_item(FunctionItem(f"{self.name}: ({self.HP} HP)", self.playCardFromHand, args=[card,self],should_exit=True))
@@ -298,7 +300,7 @@ class Player:
                         spellTargetSubmenu.append_item(FunctionItem(f"{self.opponent.name}\'s {unit.name}: ({unit.ATK} ATK)-({unit.HP} HP)", self.playCardFromHand, args=[card,unit],should_exit=True))
                     spellPlaySubmenu.append_item(spellTargetSubmenuItem)
             # print field state
-            fieldStateItem = FunctionItem("Print field state", self.printBoard, should_exit=False)
+            fieldStateItem = FunctionItem("Print field state", self.printBoard, should_exit=True)
             # end turn
             endTurnItem = FunctionItem("End turn", self.endTurn, should_exit=True)
             # ff 
@@ -360,10 +362,10 @@ class Player:
             # create blocking menu
             forfeitItem = consolemenu.items.FunctionItem("Forfeit",self.forfeit,should_exit=True)
             for attacker in self.opponent.attackQueue:
-                blockMenu = consolemenu.ConsoleMenu(title="Block Menu", subtitle=f"Defend against {attacker.name}: ({attacker.ATK} ATK)-({attacker.HP}/{attacker.maxHP} HP)", show_exit_option=False)
-                blockMenu.append_item(consolemenu.items.FunctionItem(f"{self.name}: ({self.HP}/{self.maxHP} HP)",attacker.cast, args=[self],should_exit=True))
+                blockMenu = consolemenu.ConsoleMenu(title="Block Menu", subtitle=f"Defend against {attacker.name}: ({attacker.ATK} ATK)-({attacker.HP} HP)", show_exit_option=False, clear_screen=False)
+                blockMenu.append_item(consolemenu.items.FunctionItem(f"{self.name}: ({self.HP} HP)",attacker.cast, args=[self],should_exit=True))
                 for defender in selectableUnits:
-                    blockMenu.append_item(consolemenu.items.FunctionItem(f"{defender.name}: ({defender.ATK} ATK)-({defender.HP}/{defender.maxHP} HP)",attacker.cast, args=[defender],should_exit=True))
+                    blockMenu.append_item(consolemenu.items.FunctionItem(f"{defender.name}: ({defender.ATK} ATK)-({defender.HP} HP)",attacker.cast, args=[defender],should_exit=True))
                 blockMenu.append_item(forfeitItem)
                 blockMenu.show()
                 blockMenu.join()
