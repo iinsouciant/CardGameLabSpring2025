@@ -28,8 +28,10 @@ Depicted below is the Unified Modeling Language (UML) Diagram for the Homebrew C
 
 ## UML Diagram
 
-- Used Figma to construct activity diagram: [Access here](https://www.figma.com/)
-- TBD
+- UML Diagram Direct Link: ...
+- Used Figma to construct activity diagram (normal website): [Access here](https://www.figma.com/)
+![image](https://github.com/user-attachments/assets/be77eb81-bf0e-4393-9d4e-d101e44be735)
+
 
 ### UML Activity Diagram Index
 
