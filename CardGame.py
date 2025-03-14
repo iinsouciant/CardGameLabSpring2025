@@ -363,9 +363,9 @@ class Player:
             forfeitItem = consolemenu.items.FunctionItem("Forfeit",self.forfeit,should_exit=True)
             for attacker in self.opponent.attackQueue:
                 blockMenu = consolemenu.ConsoleMenu(title="Block Menu", subtitle=f"Defend against {attacker.name}: ({attacker.ATK} ATK)-({attacker.HP} HP)", show_exit_option=False, clear_screen=False)
-                blockMenu.append_item(consolemenu.items.FunctionItem(f"{self.name}: ({self.HP} HP)",attacker.cast, args=[self],should_exit=True))
+                blockMenu.append_item(consolemenu.items.FunctionItem(f"{self.name}: ({self.HP} HP)",attacker.attack, args=[self],should_exit=True))
                 for defender in selectableUnits:
-                    blockMenu.append_item(consolemenu.items.FunctionItem(f"{defender.name}: ({defender.ATK} ATK)-({defender.HP} HP)",attacker.cast, args=[defender],should_exit=True))
+                    blockMenu.append_item(consolemenu.items.FunctionItem(f"{defender.name}: ({defender.ATK} ATK)-({defender.HP} HP)",attacker.attack, args=[defender],should_exit=True))
                 blockMenu.append_item(forfeitItem)
                 blockMenu.show()
                 blockMenu.join()
