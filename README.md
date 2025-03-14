@@ -68,6 +68,16 @@ UML/Activity:
 - https://www.figma.com/figjam/
 - https://www.geeksforgeeks.org/unified-modeling-language-uml-activity-diagrams/
 
-Websites/Menu/Card Implementations:
+Websites/Menu/Card Implementations + Potential Learning Data Plot/Matplot Graphing:
 - https://www.geeksforgeeks.org/python-linked-list/
 - https://www.geeksforgeeks.org/linked-list-data-structure/
+- CIST5B_Lecture Slides, Clarifying Questions: Erox1, Sawan
+- https://stackoverflow.com/questions/53146426/menu-and-submenu-python
+- https://github.com/albert-espin/uno-linked-list
+- https://github.com/GaneshSparkz/Snakes-and-Ladders-using-Linked-List/tree/master
+- https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax
+- https://www.geeksforgeeks.org/graph-plotting-in-python-set-1/
+- https://medium.com/the-power-of-ai/let-chatgpt-teach-you-how-to-plot-with-python-and-matplotlib-ecee91d87b16
+- https://openai.com/index/chatgpt/
+- https://pythonprogramming.net/loading-file-data-matplotlib-tutorial/
+- https://matplotlib.org/stable/api/pyplot_summary.html
