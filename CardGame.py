@@ -8,6 +8,8 @@
     Console-menu library used to simplify displaying and executing text menu functions per turn
 """
 
+# Template
+'''
 import random
 import re
 import os
@@ -95,13 +97,15 @@ class SpellCard(Card):
 
 # Change
 '''
+'''
 units = [
         ("Wizard", 4, 4, 6),
         ("Tank", 6, 2, 12),
         ("Knight", 5, 5, 7),
         ("Archer", 3, 3, 5),
-        ("Bandit", 2, 4, 2),
+        ("Bandit", 2, 4, 2)
     ]
+'''
 '''
 
 class Wizard(UnitCard):
@@ -146,6 +150,7 @@ class Attacker(UnitCard): #  Change to Knight ?
 
 # Addition: 
 '''
+'''
 class Archer(UnitCard): 
     """
     Archer class is a special type of UnitCard that is able to pierce through tanks.
@@ -165,6 +170,7 @@ class Bandit(UnitCard):
     # HP 1 - 2
     # Cost: 2
     # Attack: 4 - 8
+'''
 '''
 
 # Fix spell implementation
@@ -215,7 +221,7 @@ class Player():
         self.HP = maxHP
         self.maxMana = maxMana
         self.mana = maxMana
-        self.deck = deck
+        self.deck = deck # LinkedList
         self.hand = [] # contains Card objects in hand that can be played
         self.field = [] # contains UnitCard objects that can be used
         self.attackQueue = [] # used to hold what cards are being attacked with for opponent's block phase
@@ -270,6 +276,7 @@ class Player():
         return True
 
     '''
+'''
     def startTurn(self) -> None:
         # Start turn sequence
         print(f"Starting turn for {self.name}.")
@@ -324,7 +331,7 @@ class Player():
             else:
                 print("Option is not valid, please try again.")
     '''
-
+'''
     def blockAttack(self, attack) -> None:
         if issubclass(type(attack), UnitCard):
             self.HP -= attack.attack
@@ -341,7 +348,7 @@ class Player():
 
     def attackWithCard(self, card) -> None:
         self.attackQueue.append(card)
-
+'''
 
 '''
 Requirements (Updated):
@@ -351,7 +358,7 @@ Requirements (Updated):
 - Multiple types of cards, distinct classes that inherit from a basic Card class
 - Cards WILL BE HELD in a linked list as a deck (be removed from the deck as the game is played)
 '''
-
+'''
 # null (none) to indicate end of the list
 class Node: 
     def __init__(self, card):
@@ -501,4 +508,538 @@ if __name__ == "__main__":
     else:
         winner, loser = otherPlayer, currentPlayer
     print(f"{loser.name} is dead! {winner.name} wins!")
-            
+'''
+
+"""
+# Libraries:
+    Random library used for coin toss to decide turn order.
+    Regex library to parse user inputs
+    (deleted) OS library used for clearing console output between turns
+
+    https://pypi.org/project/console-menu/
+    Inspriation: Console-menu library used to simplify displaying and executing text menu functions per turn
+"""
+
+# new updated game
+
+"""
+# Libraries:
+    Random library used for coin toss to decide turn order.
+    Regex library to parse user inputs
+    (deleted) OS library used for clearing console output between turns
+
+    https://pypi.org/project/console-menu/
+    Inspriation: Console-menu library used to simplify displaying and executing text menu functions per turn
+"""
+
+import random
+import re
+import os
+import consolemenu
+
+'''
+# from https://stackoverflow.com/questions/517970/how-can-i-clear-the-interpreter-console
+clear = lambda: os.system('cls' if os.name == 'nt' else 'clear')
+'''
+
+# raise error later 
+class UnitNotFoundError(Exception):
+    pass
+
+class CardNotFoundError(Exception):
+    pass
+
+# LinkedList Deck
+'''
+Cards will be held in a linked list as a deck and be removed from the deck as the game is played (and potentially added back to the deck too).
+'''
+
+class Node:
+    def __init__(self, card):
+        self.card = card
+        self.next = None
+    
+class LinkedList:
+    def __init__(self):
+        self.head = None
+        self.size = 0
+
+    def isEmpty(self):
+        return self.size == 0
+
+    def addCard(self, card): # add random card to end of linked list
+        """
+        Add a new card node to the end of the linked list.
+        """
+        newNode = Node(card)
+        self.size += 1
+
+        if not self.head:
+            self.head = newNode
+            return
+
+        current = self.head
+        while current.next:
+            current = current.next
+        current.next = newNode
+
+    def removeCard(self): # draws card from deck, removes from front
+        """
+        Remove and return the card at the front of the linked list.
+        Returns None if the list is empty.
+        """
+        if not self.head:
+            return None
+
+        removedNode = self.head
+        self.head = self.head.next
+        self.size -= 1
+        return removedNode.card
+
+# ==========================================================================================================================
+
+class Card:
+    """
+    Basic Card class that "distinct classes" will inherit from.
+    The Card class that represents a card in the game. Each card has a name and a cost. (Descriptions of UnitCards displayed removed)
+    """
+    def __init__(self, name, cost):
+        self.name = name
+        self.cost = cost
+
+    def play(self, player, opponent):
+        pass
+
+# Have AT LEAST two distinct classes that inherit from a basic Card class (example: regular cards vs wild cards in Uno)
+
+class UnitCard(Card):
+    """
+    UnitCard class that represents a playable unit in the game. Each card has a name, a cost, an attack value, and health (HP). 
+    Examples:
+      - Wizard
+      - Tank
+      - Attacker (Knight?)
+      More to be added...
+    """
+    def __init__(self, name, cost, attack, health):
+        super().__init__(name, cost)
+        self.attack = attack
+        self.health = health
+        self.canAttack = True # can attack
+        self.canDefend = True # can defend
+
+    def __str__(self):
+        return f"{self.name} [Cost={self.cost}, ATK={self.attack}, HP={self.health}]"
+
+class SpellCard(Card):
+    """
+    SpellCard class that represents a playable spell in the game. Each card has a name, a description, a cost, and an effect.
+    Examples:
+      - Damage Spell
+      - Draw extra cards spell
+      - Heal Spell
+      More to be added...
+    """
+    def __init__(self, name, cost, effectType, description=""):
+        super().__init__(name, cost)
+        self.effectType = effectType  # function that applies some effect implemented
+        self.description = description
+
+    def __str__(self):
+        return f"{self.name} [Cost={self.cost}, SPELL: {self.description}]" 
+
+    def play(self, player, opponent):
+        self.effectType(player, opponent) # Casts spell when called
+
+# ==========================================================================================================================
+# Player Class
+
+class Player:
+    """
+    Player class that represents a player in the game. Each player has a hand of cards, mana...
+
+    Note: removed attackQueue for simplicity (used to hold what cards are being attacked with for opponent's block phase)
+    """
+    def __init__(self, name, deck):
+        self.name = name
+        #self.shield = shield (to be implemented in the future)
+        self.hp = 20 # All players hp 20 (adjust if needed)
+        self.mana = 0 
+        self.maxMana = 2 # Start with 3 mana max (adjust if needed)
+        self.deck = deck  # Deck held in a LinkedList
+        self.hand = []  # List of cards in the player's hand
+        self.field = []  # List of UnitCards on the field
+        self.forfeited = False
+
+    def drawCards(self, amount = 1): 
+        """
+        Used to draw an "amount" of cards from deck into hand.
+        """
+        for i in range(amount):
+            if self.deck.isEmpty():
+                return  # Check if deck is empty, Can't draw if deck is empty
+            cardDrawn = self.deck.removeCard()
+            if cardDrawn:
+                self.hand.append(cardDrawn)
+
+    def incrementMana(self): # self.maxMana = min(10, self.maxMana + 1)
+        """
+        Increase max mana per turn by 1 (max mana is 10). Will keep refreshing mana to full.
+        """
+        if self.maxMana < 10:
+            self.maxMana += 1
+        self.mana = self.maxMana # Start with 3 mana max
+
+    def playCard(self, cardIndex, opponent):
+        """
+        Put unit on field or cast at target if spell; attempts to play a card from the hand by index.
+        """
+        if cardIndex < 0 or cardIndex >= len(self.hand): # check bounds
+            print("Invalid card index.")
+            return
+        card = self.hand[cardIndex]
+        if card.cost > self.mana:
+            print(f"Not enough mana to play {card.name}.")
+            return
+        self.mana -= card.cost # subtract mana cost
+
+        if isinstance(card, UnitCard): # units playable on the field, no asleep
+            print(f"{self.name} played UnitCard: {card.name}")
+            self.field.append(card) 
+        elif isinstance(card, SpellCard):
+            print(f"{self.name} played SpellCard: {card.name}")
+            card.play(self, opponent)
+
+        self.hand.pop(cardIndex) # remove card from hand
+
+        # Display remaining mana after the play is done (fixed)
+        print(f"\n{self.name} now has {self.mana} / {self.maxMana} mana left.") # Spacer, display mana
+        print(f"{self.name} has {self.deck.size} cards left in the deck.")
+
+        # Prints out the hand of cards left for player, adjusted
+        if self.hand:
+            print(f"{self.name}'s hand:")
+            for i, card in enumerate(self.hand): 
+                print(f" [{i}] {card.name} (Cost: {card.cost})")
+        else:
+            print(f"{self.name}'s hand is now empty.")
+        
+    def startTurn(self, unit, opponent):
+        """
+        Simplified turn seq:
+        #-    play card from hand (print out names and atk/hp of cards in hand -> play unit from hand to field, or cast spell at a target)
+        #-    use card in field (choose a card and activate ability or have attack opposite player, skip, etc)
+        #-    print out field state again
+        #-    end turn
+        #-    forfeit
+        """
+        while True:
+            choice = input(f"[{self.name}'s Turn] Unit {unit.name} (Atk={unit.attack}, HP={unit.health}) action?\n"
+                           "(1) Attack\n(2) Defend\n(3) Skip\n"
+                           "Enter choice --> ") # simplified, actions for units
+            if choice == '1':
+                if unit.canAttack:
+                    self.unitAttack(unit, opponent)
+                    unit.canAttack = False  # Used up its attack
+                    return
+                else:
+                    print(f"{unit.name} cannot attack this turn.")
+                    return
+            elif choice == '2':
+                if unit.canDefend:
+                    print(f"{unit.name} is set to defend next attack.")
+                    unit.canDefend = False  # Unit now in "defending" mode
+                    return
+                else:
+                    print(f"{unit.name} cannot defend this turn.")
+                    return
+            elif choice == '3':
+                print(f"{unit.name} does nothing.")
+                return
+            else:
+                print("Invalid choice. Try again.") # If not valid int is entered 
+
+    def unitAttack(self, unit, opponent):
+        """
+        Prompts an attack on the opponent's field. Attacks player's HP if no defending units; attacks random defending card. (specific implementation in the future)
+        """
+        # Filter out units that have chosen to defend (or we can pick them).
+        defendingUnits = [u for u in opponent.field if not u.canDefend]
+        if defendingUnits:
+            # We just pick the first 'defending' unit for demonstration
+            defender = defendingUnits[0]
+            print(f"{unit.name} (ATK={unit.attack}) attacks {defender.name} (HP={defender.health}).")
+
+            defender.health -= unit.attack # compare/damage
+
+            # Remove unit from the field if dead
+            if defender.health <= 0:
+                overflowDamage = abs(defender.health) # can't have negative HP
+                print(f"{defender.name} is destroyed! Overflow damage = {overflowDamage}")
+                opponent.field.remove(defender)
+                opponent.hp -= overflowDamage # applies to player
+            else:
+                print(f"{defender.name} survives with {defender.health} HP.")
+        else:
+            print(f"{unit.name} hits {opponent.name} directly for {unit.attack} damage!")
+            opponent.hp -= unit.attack # if no defending units played
+
+        # Edit: (Print updated HP of both players) - to keep track better
+        print(f"{opponent.name}'s HP: {opponent.hp}")
+        print(f"{self.name}'s HP: {self.hp}")
+        
+    def resetActions(self): # resets the unit actions
+        """
+        Changed for simplicity, everything just defends and attacks reset (asleep may be implemented in the future)
+        """
+        for unit in self.field:
+            if unit.canDefend:
+                unit.canAttack = True
+            else:
+                unit.canAttack = False
+                unit.canDefend = True
+    
+# ================================================================================================================
+
+# Spell functions (more to be implemented later)
+def spellDrawCards(player, opponent):
+    """ Draw 2 cards from own deck. """
+    if player.deck.isEmpty():
+        print("No cards in deck!")
+        return
+    print(f"{player.name} attempts to draw 2 cards from the deck.")
+    for i in range(2):
+        if player.deck.isEmpty():
+            print("No more cards left in the deck!")
+            break
+        player.drawCards(1)
+
+def spellFireball(player, opponent):
+    """ Deal 3 damage directly to opponent's HP or overflow to their units first. """
+    damage = 3
+    print(f"\n{player.name} casts Fireball!")
+
+    # Apply damage to opponent's units first
+    if opponent.field:
+        for unit in opponent.field:
+            if damage <= 0:
+                break  # No damage left to distribute
+
+            # Apply damage to the unit
+            print(f"  {unit.name} (HP={unit.health}) takes {damage} damage.")
+            unit.health -= damage
+
+            # If the unit dies, calculate overflow damage
+            if unit.health <= 0:
+                overflowDamage = abs(unit.health)
+                print(f"    {unit.name} is destroyed! Overflow damage = {overflowDamage}")
+                opponent.field.remove(unit)
+                damage = overflowDamage  # Carry over overflow damage
+            else:
+                damage = 0  # No more overflow damage if unit survives
+
+    # Apply any remaining damage to opponent's HP
+    if damage > 0:
+        print(f"  {opponent.name} takes {damage} direct damage!")
+        opponent.hp -= damage
+
+    print(f"{opponent.name}'s current HP: {opponent.hp}")
+
+def spellHealing(player, opponent):
+    """ Heal 5 HP for units on the field first, then heal player if necessary. """
+    healingAmount = 5
+    print(f"{player.name} casts Healing Light!")
+
+    # Heal units on the opponent's field first
+    if opponent.field:
+        for unit in opponent.field:
+            if healingAmount <= 0:
+                break  # No healing left to distribute
+
+            # Heal the unit
+            healed = min(5, healingAmount)  # Heal up to 5 HP or the remaining healing amount
+            unit.health += healed
+            healingAmount -= healed
+
+            print(f"  {unit.name} heals for {healed} HP (Current HP: {unit.health})")
+
+    # If there is still healing left, heal the player
+    if healingAmount > 0:
+        player.hp += healingAmount
+        print(f"  {player.name} heals for {healingAmount} HP!")
+        # Ensure HP doesn't exceed 20 (or any desired max HP)
+        if player.hp > 20:
+            player.hp = 20
+        print(f"{player.name}'s current HP: {player.hp}")
+
+# ================================================================================================================
+
+# Game functions 
+def buildDeck(numCards=25):
+    """
+    - Builds a random deck (LinkedList) of 25 cards (for each player minimum).
+    """
+    randomUnits = [
+        ("Wizard", 4, 4, 6),
+        ("Tank", 6, 2, 12),
+        ("Knight", 5, 5, 7),
+        ("Archer", 3, 3, 5),
+        ("Bandit", 2, 4, 2)
+    ]
+    """
+    Wizard class is a special type of UnitCard that posseses magical abilities. (Future Implementation ex: a unit that boosts card spells.)
+
+    Tank class is a special type of UnitCard that is able to absorb damage.
+
+    Attacker (Knight) class is a special type of UnitCard that deals large amounts of damage.
+
+    Archer class is a special type of UnitCard that is able to deal moderate damage from afar. (Future Implementation ex: pierce through tanks, 2x damage.)
+
+    Bandit class is a special type of UnitCard that is stealthy and powerful but is vulnerable (posseses low health).
+
+    """
+
+    randomSpells = [
+        ("Draw Spell", 3, spellDrawCards, "Draw 2 cards"),
+        ("Fireball", 4, spellFireball, "Deal 3 damage to opponent"),
+        ("Heal", 3, spellHealing, "Heal 5 HP")
+    ]
+
+    """
+    Heal: A SpellCard that restores the health of UnitCards.
+
+    Damage (Fireball): A SpellCard that deals damage to an opposing UnitCard/Player.
+
+    Draw: A SpellCard that allows the player to draw additional cards.
+    """
+
+    deck = LinkedList()
+    for i in range(numCards):
+        if random.random() < 0.5: # making it a 50/50 chance of picking a unit or a spell
+            name, cost, atk, hp = random.choice(randomUnits)
+            deck.addCard(UnitCard(name, cost, atk, hp))
+        else:
+            name, cost, effect, desc = random.choice(randomSpells)
+            deck.addCard(SpellCard(name, cost, effect, desc))
+
+    return deck
+
+def coinToss(): # same as ? return random.choice([True, False]) 
+    '''
+    Coin flip simplification:
+    https://stackoverflow.com/questions/6824681/get-a-random-boolean-in-python
+    '''
+    return random.choice([True, False])
+    # Same implementation as old coin flip, automized
+
+def checkConditions(player1, player2):
+    """
+    Check if either player: 
+    - no more hp
+    - no cards in hand + deck
+    - forfeit.
+    """
+    if player1.forfeited: # Check forfeit 
+        print(f"{player2.name} wins because {player1.name} forfeited the game!")
+        return "Player2"
+    if player2.forfeited:
+        print(f"{player1.name} wins because {player2.name} forfeited the game!")
+        return "Player1"
+    if player1.hp <= 0: # Check HP
+        print(f"\n{player2.name} wins because {player1.name} has no more HP!")
+        return "Player2"
+    if player2.hp <= 0:
+        print(f"\n{player1.name} wins because {player2.name} has no more HP!")
+        return "Player1"
+    if player1.deck.isEmpty() and len(player1.hand) == 0 and len(player1.field) == 0: # Deck/Hand check: if a player's deck is empty AND their hand is empty AND they have no units on field results in a loss
+        print(f"\n{player2.name} wins because {player1.name} has no more cards to play!")
+        return "Player2"
+    if player2.deck.isEmpty() and len(player2.hand) == 0 and len(player2.field) == 0:
+        print(f"\n{player1.name} wins because {player2.name} has no more cards to play!")
+        return "Player1"
+    return None
+
+# Future
+# Create Text Menu with consolemenu
+# menu = consolemenu.ConsoleMenu("Hearthgathering","Play your turn")
+
+def main():
+    print("=========================================")
+    print("Welcome to the Hearthgathering Card Game")
+    print("A simple digital collectible card game...!")
+    print("=========================================")
+    p1Deck = buildDeck(30) # How many cards in deck setter (deck at least 25 cards), random deck build
+    p2Deck = buildDeck(6) # If set at 6 for example, no cards will be drawn empty deck, # 1 or 0 to test if no cards and no deck error
+    player1 = Player(input("Enter name for player 1 (P1): "), p1Deck)
+    player2 = Player(input("Enter name for player 2 (P2): "), p2Deck)
+    player1.drawCards(5) # adjust if needed start with 5 as in brainstorms
+    player2.drawCards(5)
+
+    # Coin toss
+    p1Turn = coinToss()
+    if p1Turn:
+        print("Player1 won the coin toss! Player1 goes first.")
+    else:
+        print("Player2 won the coin toss! Player2 goes first.")
+
+    # Start the main game loop
+    roundCount = 1
+    while True:
+        print(f"\n=== ROUND {roundCount} ===\n")
+        currentPlayer = player1 if p1Turn else player2
+        opponentPlayer = player2 if p1Turn else player1
+        currentPlayer.incrementMana()
+        currentPlayer.resetActions()
+        currentPlayer.drawCards(1) # free draw per turn
+
+        print(f"{currentPlayer.name} has attempted to draw 1 card.")
+
+        # Menu dusplay simplified 
+        print(
+            f"\n{currentPlayer.name}'s TURN (HP={currentPlayer.hp}, Mana={currentPlayer.mana}/{currentPlayer.maxMana})")
+        print(f"{currentPlayer.name} hand: {[str(c) for c in currentPlayer.hand]}")
+        print(f"{currentPlayer.name} field: {[str(u) for u in currentPlayer.field]}")
+        print(f"{opponentPlayer.name} field: {[str(u) for u in opponentPlayer.field]}")
+        print(f"Type 'play <index>' (starts at 0) to play a card from your hand, 'forfeit' to give up, or 'end' to end your turn.")
+        while True:
+            command = input(f"{currentPlayer.name}, enter command: ").strip().lower()
+            if command.startswith("play"): # parse index
+                parts = command.split()
+                if len(parts) == 2 and parts[1].isdigit():
+                    cardIndex = int(parts[1])
+                    currentPlayer.playCard(cardIndex, opponentPlayer)
+                else:
+                    print("Usage: play <hand index>")
+            elif command == "forfeit":
+                print(f"{currentPlayer.name} forfeits the game!")
+                currentPlayer.forfeited = True
+                break
+            elif command == "end":
+                break
+            else:
+                print("Unknown command. Options: 'play <index>', 'end', 'forfeit'.")
+
+            winner = checkConditions(player1, player2) # check game end conditions again
+            if winner:
+                print(f"Game Over! Winner: {winner}")
+                return
+
+        # Menu to choose actions for units on field
+        print(f"\n{currentPlayer.name} is deciding actions for their Units...")
+        for unit in currentPlayer.field:
+            if unit.health > 0:
+                currentPlayer.startTurn(unit, opponentPlayer)
+            else:
+                currentPlayer.field.remove(unit) # "Remove dead units if any slipped through"
+
+        winner = checkConditions(player1, player2) # check game end conditions again
+        if winner:
+            print(f"Game Over! Winner: {winner}")
+            return
+        
+        p1Turn = not p1Turn # turn switch
+        roundCount += 1 # round counter implement max amount of rounds who has the higher HP wins?
+
+
+if __name__ == "__main__":
+    main()
