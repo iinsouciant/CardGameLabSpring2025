@@ -316,33 +316,6 @@ class Player:
 
             mainTurnMenu.show()
             mainTurnMenu.join()
-            '''
-            while True:
-                choice = input(f"[{self.name}'s Turn] Unit {unit.name} (Atk={unit.ATK}, HP={unit.HP}) action?\n"
-                            "(1) Attack\n(2) Defend\n(3) Skip\n"
-                            "Enter choice --> ") # simplified, actions for units
-                if choice == '1':
-                    if unit.canAttack:
-                        self.unitAttack(unit, opponent)
-                        unit.canAttack = False  # Used up its attack
-                        return
-                    else:
-                        print(f"{unit.name} cannot attack this turn.")
-                        return
-                elif choice == '2':
-                    if unit.canDefend:
-                        print(f"{unit.name} is set to defend next attack.")
-                        unit.canDefend = False  # Unit now in "defending" mode
-                        return
-                    else:
-                        print(f"{unit.name} cannot defend this turn.")
-                        return
-                elif choice == '3':
-                    print(f"{unit.name} does nothing.")
-                    return
-                else:
-                    print("Invalid choice. Try again.") # If not valid int is entered 
-            break if loops exceeded or if end turn/forfeit selected'''
             endTurn = endTurnItem.get_return()
             winner = checkConditions(self, self.opponent) # check game end conditions again
             if (i >= 100) or winner:
@@ -383,30 +356,6 @@ class Player:
         """
         self.attackQueue.append(unit)
         unit.canAttack = unit.canDefend =False
-        '''# Filter out units that have chosen to defend (or we can pick them).
-        defendingUnits = [u for u in opponent.field if not u.canDefend]
-        if defendingUnits:
-            # We just pick the first 'defending' unit for demonstration
-            defender = defendingUnits[0]
-            print(f"{unit.name} (ATK={unit.ATK}) attacks {defender.name} (HP={defender.HP}).")
-
-            defender.HP -= unit.ATK # compare/damage
-
-            # Remove unit from the field if dead
-            if defender.HP <= 0:
-                overflowDamage = abs(defender.HP) # can't have negative HP
-                print(f"{defender.name} is destroyed! Overflow damage = {overflowDamage}")
-                opponent.field.remove(defender)
-                opponent.HP -= overflowDamage # applies to player
-            else:
-                print(f"{defender.name} survives with {defender.HP} HP.")
-        else:
-            print(f"{unit.name} hits {opponent.name} directly for {unit.ATK} damage!")
-            opponent.HP -= unit.ATK # if no defending units played
-
-        # Edit: (Print updated HP of both players) - to keep track better
-        print(f"{opponent.name}'s HP: {opponent.HP}")
-        print(f"{self.name}'s HP: {self.HP}")'''
         
     def resetActions(self): # resets the unit actions
         """
@@ -577,49 +526,6 @@ def main():
         currentPlayer.blockPhase()
         currentPlayer.startMainPhase(roundCount)
 
-        '''# Menu dusplay simplified 
-        print(
-            f"\n{currentPlayer.name}'s TURN (HP={currentPlayer.HP}, Mana={currentPlayer.mana}/{currentPlayer.maxMana})")
-        print(f"{currentPlayer.name} hand: {[str(c) for c in currentPlayer.hand]}")
-        print(f"{currentPlayer.name} field: {[str(u) for u in currentPlayer.field]}")
-        print(f"{opponentPlayer.name} field: {[str(u) for u in opponentPlayer.field]}")
-        print(f"Type 'play <index>' (starts at 0) to play a card from your hand, 'forfeit' to give up, or 'end' to end your turn.")
-        while True:
-            command = input(f"{currentPlayer.name}, enter command: ").strip().lower()
-            if command.startswith("play"): # parse index
-                parts = command.split()
-                if len(parts) == 2 and parts[1].isdigit():
-                    cardIndex = int(parts[1])
-                    currentPlayer.playCard(cardIndex, opponentPlayer)
-                else:
-                    print("Usage: play <hand index>")
-            elif command == "forfeit":
-                print(f"{currentPlayer.name} forfeits the game!")
-                currentPlayer.forfeited = True
-                break
-            elif command == "end":
-                break
-            else:
-                print("Unknown command. Options: 'play <index>', 'end', 'forfeit'.")
-
-            winner = checkConditions(player1, player2) # check game end conditions again
-            if winner:
-                print(f"Game Over! Winner: {winner}")
-                return
-
-        # Menu to choose actions for units on field
-        print(f"\n{currentPlayer.name} is deciding actions for their Units...")
-        for unit in currentPlayer.field:
-            if unit.HP > 0:
-                currentPlayer.startTurn(unit, opponentPlayer)
-            else:
-                currentPlayer.field.remove(unit) # "Remove dead units if any slipped through"
-
-        winner = checkConditions(player1, player2) # check game end conditions again
-        if winner:
-            print(f"Game Over! Winner: {winner}")
-            return'''
-        
         p1Turn = not p1Turn # turn switch
         roundCount += 1 # round counter implement max amount of rounds who has the higher HP wins?
         winner = checkConditions(player1, player2) # check game end conditions again
