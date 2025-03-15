@@ -136,7 +136,7 @@ class UnitCard(Card):
         if self.HP <= 0:
             self.popFromField()
 
-    def blockAttack(self, card) -> int:
+    def blockAttack(self, card) -> int: # TODO fix player not taking damage
         # return damage dealt back to attacker
         self.HP -= card.ATK
         # on death
@@ -144,7 +144,7 @@ class UnitCard(Card):
             # overkill damage dealt to player
             self.owner.blockAttack(-self.HP)
             # remove from play
-            self.popFromField()
+            self.popFromField() # TODO fix unit not being removed from field
         return self.ATK
 
 class SpellCard(Card):
@@ -329,7 +329,7 @@ class Player:
             # ending block phase computes player health then computes unit health/death
             selectableUnits = []
             for unit in self.field:
-                if unit.asleep is not True:
+                if unit.canDefend is True:
                     selectableUnits.append(unit)
             
             # create blocking menu
