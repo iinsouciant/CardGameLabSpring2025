@@ -132,19 +132,24 @@ class UnitCard(Card):
         raise UnitNotFoundError
 
     def attack(self, target) -> None:
-        self.HP -= target.blockAttack(self)
+        backlash = target.blockAttack(self)
+        self.HP -= backlash
+        if backlash > 0:
+            print(f"{self.name} has taken {backlash} damage. HP = {self.HP}")
         if self.HP <= 0:
             self.popFromField()
 
     def blockAttack(self, card) -> int: # TODO fix player not taking damage
         # return damage dealt back to attacker
         self.HP -= card.ATK
+        print(f"{self.name} has taken {card.ATK} damage. HP = {self.HP}")
         # on death
         if self.HP <= 0:
             # overkill damage dealt to player
             self.owner.blockAttack(-self.HP)
             # remove from play
             self.popFromField() # TODO fix unit not being removed from field
+            print(f"{self.name} has died. Removing from field.\n")
         return self.ATK
 
 class SpellCard(Card):
@@ -191,6 +196,12 @@ class Player:
 
     def forfeit(self) -> None:
         self.forfeited = True
+        self.HP = 0
+
+    def isAlive(self) -> bool:
+        if self.forfeited or self.HP <= 0 or (self.deck.isEmpty() and len(self.hand) == 0 and len(self.field) == 0):
+            return False
+        return True
 
     def setOpponent(self, opponent) -> None:
         if type(opponent) is Player:
@@ -248,6 +259,20 @@ class Player:
         print(f"{self.name} field: {[str(u) for u in self.field]}")
         print(f"{self.opponent.name} field: {[str(u) for u in self.opponent.field]}")
 
+    def blockAttack(self, attack) -> int:
+        if issubclass(type(attack), UnitCard):
+            self.HP -= attack.ATK
+            print(f"{self.name} has taken {attack.ATK} damage. HP = {self.HP}")
+            return 0
+        elif issubclass(type(attack), SpellCard):
+            raise NotImplementedError
+        elif issubclass(type(attack), int):
+            self.HP -= attack
+            print(f"{self.name} has taken {attack} damage. HP = {self.HP}")
+            return 0
+        else:
+            raise TypeError
+
     def startMainPhase(self, roundCount: int):
         """
         Simplified turn seq:
@@ -271,13 +296,13 @@ class Player:
             \n{self.name} hand: {[str(c) for c in self.hand]}", show_exit_option=False, clear_screen=False)
 
             # submenu for available units in field to attack with
-            unitAttackSubmenu = consolemenu.ConsoleMenu(title=f"Attack {self.opponent.name} with Units on Field", subtitle="Units must wait one turn to attack or defend")
+            unitAttackSubmenu = consolemenu.ConsoleMenu(title=f"Attack {self.opponent.name} with Units on Field", subtitle="Units must wait one turn to attack or defend", clear_screen=False)
             unitAttackSubmenuItem = SubmenuItem("Attack with units", submenu=unitAttackSubmenu, should_exit=True)
             for unit in self.field:
                 if unit.canAttack:
                     unitAttackSubmenu.append_item(FunctionItem(f"{unit.name}: ({unit.ATK} ATK)-({unit.HP} HP)", self.unitAttack, args=[unit], should_exit=True))
             # submenu for units in hand to play (will need to validate cost on playing)
-            unitPlaySubmenu = consolemenu.ConsoleMenu(title=f"Place Unit on Field")
+            unitPlaySubmenu = consolemenu.ConsoleMenu(title=f"Place Unit on Field", clear_screen=False)
             unitPlaySubmenuItem = SubmenuItem("Play units from hand", submenu=unitPlaySubmenu, should_exit=True)
             for card in self.hand:
                 if issubclass(type(card), UnitCard):
@@ -317,8 +342,7 @@ class Player:
             mainTurnMenu.show()
             mainTurnMenu.join()
             endTurn = endTurnItem.get_return()
-            winner = checkConditions(self, self.opponent) # check game end conditions again
-            if (i >= 100) or winner:
+            if (i >= 100) or not self.isAlive() or not self.opponent.isAlive():
                 break
 
     def blockPhase(self):
@@ -345,9 +369,7 @@ class Player:
                 # remove attacker once done
                 self.opponent.attackQueue.pop(0)
                 # check if player has died from attack or ff'ed
-                winner = checkConditions(self, self.opponent) # check game end conditions again
-                if winner:
-                    print(f"Game Over! Winner: {winner}")
+                if not self.isAlive():
                     return
 
     def unitAttack(self, unit):
@@ -399,7 +421,7 @@ def spellHealing(player, target):
     # Apply healing/overheal to target
     if healingAmount > 0:
         target.HP += healingAmount
-        print(f"  {target.name} heals for {healingAmount} HP!")
+        print(f"  {target.name} heals for {healingAmount} HP! (Max 20 HP)")
         # Ensure HP doesn't exceed 20 (or any desired max HP)
         if target.HP > 20:
             target.HP = 20
@@ -524,6 +546,9 @@ def main():
         currentPlayer = player1 if p1Turn else player2
         opponentPlayer = player2 if p1Turn else player1
         currentPlayer.blockPhase()
+        winner = checkConditions(player1, player2) # check game end conditions
+        if (roundCount >= 100) or winner:
+            break
         currentPlayer.startMainPhase(roundCount)
 
         p1Turn = not p1Turn # turn switch
