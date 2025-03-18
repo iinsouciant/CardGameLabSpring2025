@@ -412,9 +412,9 @@ def spellFireball(player, target):
     target.HP -= damage
     if target.HP <= 0:
         target.popFromField()
-        print(f"{target.name} has died. Removing from field.\n")
+        print(f"{target.name} has died. Removing from field.\n") 
 
-    print(f"{target.name}'s current HP: {target.HP}")
+    print(f"{target.name}'s current HP: {target.HP}") # accounts display overflow
 
 def spellHealing(player, target):
     """ Heal 5 HP for units on the field first, then heal player if necessary. """
