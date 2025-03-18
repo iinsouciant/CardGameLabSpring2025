@@ -410,6 +410,9 @@ def spellFireball(player, target):
     # Apply damage to target
     print(f"  {target.name} takes {damage} direct damage!")
     target.HP -= damage
+    if target.HP <= 0:
+        target.popFromField()
+        print(f"{target.name} has died. Removing from field.\n")
 
     print(f"{target.name}'s current HP: {target.HP}")
 
